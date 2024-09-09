@@ -1,0 +1,35 @@
+opam-version: "2.0"
+name: "ocaml-unikraft-backend-qemu-arm64"
+version: "0.17.0"
+synopsis: "QEMU/arm64 Unikraft backend for OCaml"
+maintainer: "samuel@tarides.com"
+authors: ["Samuel Hym" "Unikraft contributors"]
+license: ["MIT" "BSD-3-Clause" "GPL-2.0-only"]
+depends: [
+  "unikraft" {= "0.17.0+fix"}
+]
+build: [
+  [
+    make
+    "-j%{jobs}%"
+    "UNIKRAFT=%{lib}%/unikraft"
+    "PLAT=qemu"
+    "TGTARCH=arm64"
+    "backend"
+  ]
+  [make "PLAT=qemu" "TGTARCH=arm64" "%{name}%.install"]
+]
+extra-source "lib-musl.tar.gz" {
+  src:
+    "https://github.com/unikraft/lib-musl/archive/refs/tags/RELEASE-0.17.0.tar.gz"
+  checksum:
+    "sha256=d0f44df097122f65f53325b0d1848fe20929b4b9156c2621c7c1bc8cd66afdef"
+}
+extra-source "musl-1.2.3.tar.gz" {
+  src: "https://www.musl-libc.org/releases/musl-1.2.3.tar.gz"
+  checksum:
+    "sha256=7d5b0b6062521e4627e099e4c9dc8248d32a30285e959b7eecaa780cf8cfd4a4"
+}
+pin-depends: [
+  ["unikraft.0.17.0+fix" "git+https://github.com/shym/unikraft.git#66bab9efad04cc4298755f04278b36c6ec353867"]
+]

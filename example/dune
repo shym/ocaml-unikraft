@@ -1,0 +1,83 @@
+; SPDX-License-Identifier: MIT
+; Copyright (c) 2024 Samuel Hym, Tarides <samuel@tarides.com>
+
+(executable
+ (name main)
+ (link_flags
+  :standard
+  (:include "link_flags"))
+ (libraries unix)
+ (foreign_stubs
+  (language c)
+  (names startup)))
+
+(rule
+ (enabled_if
+  (= %{context_name} unikraft-amd64))
+ (action
+  (write-file
+   "link_flags"
+   "(-cclib \"-z unikraft-backend=%{env:UNIKRAFTBACKEND=qemu}\")")))
+
+(rule
+ (enabled_if
+  (<> %{context_name} unikraft-amd64))
+ (action
+  (write-file "link_flags" "()")))
+
+(rule
+ (alias runtest)
+ (enabled_if
+  (and
+   (= %{context_name} unikraft-amd64)
+   (= %{env:UNIKRAFTBACKEND=qemu} qemu)
+   %{bin-available:qemu-system-x86_64}))
+ (action
+  (run
+   qemu-system-x86_64
+   --enable-kvm
+   -cpu
+   host
+   -nographic
+   -nodefaults
+   -serial
+   stdio
+   -kernel
+   %{dep:main.exe}
+   -append
+   %{env:UNIKERNEL_CMDLINE=default})))
+
+(rule
+ (alias runtest)
+ (enabled_if
+  (and
+   (= %{context_name} unikraft-amd64)
+   (= %{env:UNIKRAFTBACKEND=qemu} fc)
+   %{bin-available:firecracker}))
+ (deps
+  main.exe
+  (:config generated_vm_config.json))
+ (action
+  (run firecracker --no-api --config-file %{config})))
+
+(rule
+ (enabled_if
+  (and
+   (= %{context_name} unikraft-amd64)
+   (= %{env:UNIKERNEL_CMDLINE=default} default)))
+ (action
+  (copy firecracker_vm_config.json generated_vm_config.json)))
+
+(rule
+ (enabled_if
+  (and
+   (= %{context_name} unikraft-amd64)
+   (<> %{env:UNIKERNEL_CMDLINE=default} default)))
+ (action
+  (with-stdout-to
+   generated_vm_config.json
+   (run
+    sed
+    -e
+    s/default/%{env:UNIKERNEL_CMDLINE=default}/
+    %{dep:firecracker_vm_config.json}))))

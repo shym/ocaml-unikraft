@@ -1,0 +1,14 @@
+opam-version: "2.0"
+name: "ocaml-unikraft"
+version: "0.0.1"
+synopsis: "Virtual package to ensure the QEMU Unikraft backend is installed for the default cross-compiler"
+description:
+  "This virtual package ensures that the QEMU backend is installed for the default `unikraft` ocamlfind cross toolchain."
+maintainer: "samuel@tarides.com"
+authors: "Samuel Hym"
+license: "MIT"
+depends: [
+  "ocaml-unikraft"
+  ("ocaml-unikraft-default-x86_64" & "ocaml-unikraft-backend-qemu-x86_64") |
+  ("ocaml-unikraft-default-arm64" & "ocaml-unikraft-backend-qemu-arm64")
+]

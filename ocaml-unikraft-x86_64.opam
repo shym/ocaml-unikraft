@@ -1,0 +1,41 @@
+opam-version: "2.0"
+name: "ocaml-unikraft-x86_64"
+version: "0.0.1"
+synopsis: "OCaml cross-compiler to the freestanding Unikraft x86_64 backends"
+description:
+  "This package provides a OCaml cross-compiler, suitable for linking with a Unikraft x86_64 unikernel."
+maintainer: "samuel@tarides.com"
+authors: "Samuel Hym"
+license: ["MIT" "LGPL-2.1-or-later WITH OCaml-LGPL-linking-exception"]
+depends: [
+  "ocaml" {= "5.2.0"}
+  "ocaml-unikraft-toolchain-x86_64"
+  "ocamlfind"
+]
+build: [
+  [
+    make
+    "-j%{jobs}%"
+    "prefix=%{prefix}%"
+    "BIN=%{bin}%"
+    "LIB=%{lib}%"
+    "SHARE=%{share}%"
+    "TGTARCH=x86_64"
+    "compiler"
+  ]
+  [
+    make
+    "-j%{jobs}%"
+    "prefix=%{prefix}%"
+    "BIN=%{bin}%"
+    "LIB=%{lib}%"
+    "SHARE=%{share}%"
+    "TGTARCH=x86_64"
+    "%{name}%.install"
+  ]
+]
+extra-source "ocaml-src.tar.gz" {
+  src: "https://github.com/ocaml/ocaml/archive/5.2.0.tar.gz"
+  checksum:
+    "sha256=48554abfd530fcdaa08f23f801b699e4f74c320ddf7d0bd56b0e8c24e55fc911"
+}
