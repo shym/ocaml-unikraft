@@ -3,12 +3,15 @@
 
 (executable
  (name main)
- (link_flags
+ (flags
   :standard
-  (:include "link_flags"))
+  (:include "flags"))
  (libraries unix)
  (foreign_stubs
   (language c)
+  (flags
+   :standard
+   (:include "c_flags"))
   (names startup)))
 
 (rule
@@ -16,14 +19,28 @@
   (= %{context_name} unikraft-amd64))
  (action
   (write-file
-   "link_flags"
+   "flags"
    "(-cclib \"-z unikraft-backend=%{env:UNIKRAFTBACKEND=qemu}\")")))
 
 (rule
  (enabled_if
   (<> %{context_name} unikraft-amd64))
  (action
-  (write-file "link_flags" "()")))
+  (write-file "flags" "()")))
+
+(rule
+ (enabled_if
+  (= %{context_name} unikraft-amd64))
+ (action
+  (write-file
+   "c_flags"
+   "(-z unikraft-backend=%{env:UNIKRAFTBACKEND=qemu})")))
+
+(rule
+ (enabled_if
+  (<> %{context_name} unikraft-amd64))
+ (action
+  (write-file "c_flags" "()")))
 
 (rule
  (alias runtest)
