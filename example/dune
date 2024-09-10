@@ -16,7 +16,7 @@
 
 (rule
  (enabled_if
-  (= %{context_name} unikraft-amd64))
+  (= %{context_name} unikraft))
  (action
   (write-file
    "flags"
@@ -24,13 +24,13 @@
 
 (rule
  (enabled_if
-  (<> %{context_name} unikraft-amd64))
+  (<> %{context_name} unikraft))
  (action
   (write-file "flags" "()")))
 
 (rule
  (enabled_if
-  (= %{context_name} unikraft-amd64))
+  (= %{context_name} unikraft))
  (action
   (write-file
    "c_flags"
@@ -38,23 +38,27 @@
 
 (rule
  (enabled_if
-  (<> %{context_name} unikraft-amd64))
+  (<> %{context_name} unikraft))
  (action
   (write-file "c_flags" "()")))
+
+(rule
+ (deps
+  (env_var CI))
+ (action
+  (with-stdout-to
+   qemu-call
+   (run ./gen_qemu_call.sh %{architecture}))))
 
 (rule
  (alias runtest)
  (enabled_if
   (and
-   (= %{context_name} unikraft-amd64)
-   (= %{env:UNIKRAFTBACKEND=qemu} qemu)
-   %{bin-available:qemu-system-x86_64}))
+   (= %{context_name} unikraft)
+   (= %{env:UNIKRAFTBACKEND=qemu} qemu)))
  (action
   (run
-   qemu-system-x86_64
-   --enable-kvm
-   -cpu
-   host
+   %{read-lines:qemu-call}
    -nographic
    -nodefaults
    -serial
@@ -68,7 +72,7 @@
  (alias runtest)
  (enabled_if
   (and
-   (= %{context_name} unikraft-amd64)
+   (= %{context_name} unikraft)
    (= %{env:UNIKRAFTBACKEND=qemu} fc)
    %{bin-available:firecracker}))
  (deps
@@ -80,7 +84,7 @@
 (rule
  (enabled_if
   (and
-   (= %{context_name} unikraft-amd64)
+   (= %{context_name} unikraft)
    (= %{env:UNIKERNEL_CMDLINE=default} default)))
  (action
   (copy firecracker_vm_config.json generated_vm_config.json)))
@@ -88,7 +92,7 @@
 (rule
  (enabled_if
   (and
-   (= %{context_name} unikraft-amd64)
+   (= %{context_name} unikraft)
    (<> %{env:UNIKERNEL_CMDLINE=default} default)))
  (action
   (with-stdout-to

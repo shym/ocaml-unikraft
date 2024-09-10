@@ -6,6 +6,6 @@
 
 (context
  (default
-  (name unikraft-amd64)
-  (toolchain unikraft_x86_64)
+  (name unikraft)
+  (toolchain unikraft)
   (host default)))
