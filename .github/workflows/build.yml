@@ -1,0 +1,51 @@
+name: Build and test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install OCaml compiler
+        uses: ocaml/setup-ocaml@v3
+        with:
+          ocaml-compiler: 5.2.0
+      - name: Install extra packages
+        run: |
+          sudo apt-get install -y gcc-aarch64-linux-gnu
+      - name: Install arch-specific packages
+        run: |
+          opam install                         \
+            ocaml-unikraft-x86_64              \
+            ocaml-unikraft-backend-qemu-x86_64 \
+            ocaml-unikraft-backend-fc-x86_64   \
+            ocaml-unikraft-arm64               \
+            ocaml-unikraft-backend-qemu-arm64  \
+            ocaml-unikraft-backend-fc-arm64
+      - name: Show configuration
+        run: |
+          opam exec -- ocamlc -config
+          opam config list
+          opam list
+      - name: Install default packages
+        run: |
+          opam install                    \
+            ocaml-unikraft                \
+            ocaml-unikraft-default-x86_64 \
+            ocaml-unikraft-backend-qemu   \
+            ocaml-unikraft-backend-fc
+      - name: Show configuration
+        run: |
+          opam exec -- ocamlc -config
+          opam config list
+          opam list
+      - name: Install the other default packages
+        run: |
+          opam install ocaml-unikraft-default-arm64
+      - name: Show configuration
+        run: |
+          opam exec -- ocamlc -config
+          opam config list
+          opam list
