@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -14,7 +14,8 @@ jobs:
           ocaml-compiler: 5.2.0
       - name: Install extra packages
         run: |
-          sudo apt-get install -y gcc-aarch64-linux-gnu
+          sudo apt-get install -y gcc-aarch64-linux-gnu \
+            qemu-system-x86 qemu-system-arm
       - name: Install arch-specific packages
         run: |
           opam install                         \
@@ -29,23 +30,33 @@ jobs:
           opam exec -- ocamlc -config
           opam config list
           opam list
-      - name: Install default packages
+      - name: Install default x86_64 packages
         run: |
           opam install                    \
             ocaml-unikraft                \
             ocaml-unikraft-default-x86_64 \
             ocaml-unikraft-backend-qemu   \
             ocaml-unikraft-backend-fc
-      - name: Show configuration
+      - name: Show toolchain configuration
         run: |
-          opam exec -- ocamlc -config
-          opam config list
-          opam list
+          opam exec -- ocamlfind -toolchain unikraft ocamlc -config
+      - name: Test example
+        run: |
+          opam install dune
+          cd example
+          opam exec -- dune runtest
+          UNIKERNEL_CMDLINE=sleep opam exec -- dune runtest
       - name: Install the other default packages
         run: |
           opam install ocaml-unikraft-default-arm64
       - name: Show configuration
         run: |
-          opam exec -- ocamlc -config
-          opam config list
-          opam list
+          opam exec -- ocamlfind -toolchain unikraft ocamlc -config
+      - name: Test example
+        run: |
+          opam install dune
+          cd example
+          opam exec -- dune runtest
+          UNIKERNEL_CMDLINE=sleep opam exec -- dune runtest
+        # Currently the ARM port is failing
+        continue-on-error: true
