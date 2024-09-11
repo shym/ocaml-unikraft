@@ -8,8 +8,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Compute dummy PATH
+        run: |
+          echo "DUMMYPATH=$PWD/.github/bin/:$PATH" >> "$GITHUB_ENV"
       - name: Install OCaml compiler
         uses: ocaml/setup-ocaml@v3
+        env:
+          PATH: ${{ env.DUMMYPATH }}
+          OVERRIDE_APT_INSTALL: bubblewrap g++-multilib gcc-multilib
         with:
           ocaml-compiler: 5.2.0
       - name: Install extra packages
