@@ -61,6 +61,10 @@ all: compiler
 
 LIBMUSL := _build/libs/musl
 MUSLARCHIVE := $(wildcard musl-*.tar.gz)
+MUSLARCHIVEPATH := $(BEBLDLIBDIR)/libmusl/$(MUSLARCHIVE)
+LIBLWIP := _build/libs/lwip
+LWIPARCHIVE := $(wildcard lwip-*.zip)
+LWIPARCHIVEPATH := $(BEBLDLIBDIR)/liblwip/$(patsubst lwip-%,%,$(LWIPARCHIVE))
 CONFIG := dummykernel/$(PLAT)-$(TGTARCH).fullconfig
 
 UKMAKE := umask 0022 && \
@@ -68,28 +72,32 @@ UKMAKE := umask 0022 && \
        CONFIG_UK_BASE="$(UNIKRAFT)/" \
        O="$$PWD/$(BEBLDLIBDIR)/" \
        A="$$PWD/dummykernel/" \
-       L="$$PWD/$(LIBMUSL)" \
+       L="$$PWD/$(LIBMUSL):$$PWD/$(LIBLWIP)" \
        N=dummykernel \
        C="$$PWD/$(CONFIG)"
 
 # Main build rule for the dummy kernel
 $(BACKENDBUILT): $(CONFIG) | $(BEBLDLIBDIR)/Makefile $(LIB)/unikraft \
-    $(BELIBDIR)/libmusl/$(MUSLARCHIVE) $(LIBMUSL)
+    $(MUSLARCHIVEPATH) $(LIBMUSL) $(LWIPARCHIVEPATH) $(LIBLWIP)
 	+$(UKMAKE) sub_make_exec=1
 	touch $@
 
-$(LIBMUSL): lib-musl.tar.gz
+_build/libs/%: lib-%.tar.gz
 	mkdir -p $@
 	$(UNTARSTRIP) -f $< -C $@
 
-$(BEBLDLIBDIR)/libmusl/$(MUSLARCHIVE): $(MUSLARCHIVE)
+$(MUSLARCHIVEPATH): $(MUSLARCHIVE)
+	mkdir -p $(dir $@)
+	$(HARDLINK) $< $@
+
+$(LWIPARCHIVEPATH): $(LWIPARCHIVE)
 	mkdir -p $(dir $@)
 	$(HARDLINK) $< $@
 
 # Enabled only on Linux (requirement of the olddefconfig target) and in
 # development (no need to rebuild the configuration in release)
 $(CONFIG): dummykernel/$(PLAT)-$(TGTARCH).config \
-    | $(BEBLDLIBDIR)/Makefile $(LIBMUSL)
+    | $(BEBLDLIBDIR)/Makefile $(LIBMUSL) $(LIBLWIP)
 	if [ -e .git -a "`uname`" = Linux ]; then \
 	    cp $< $@; \
 	    $(UKMAKE) olddefconfig; \
