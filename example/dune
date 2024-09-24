@@ -57,16 +57,26 @@
    (= %{context_name} unikraft)
    (= %{env:UNIKRAFTBACKEND=qemu} qemu)))
  (action
-  (run
-   %{read-lines:qemu-call}
-   -nographic
-   -nodefaults
-   -serial
-   stdio
-   -kernel
-   %{dep:main.exe}
-   -append
-   %{env:UNIKERNEL_CMDLINE=default})))
+  (with-accepted-exit-codes
+   (or
+    0
+    83
+    ; 83: Unikraft successful exit with ISA debug
+    )
+   (run
+    %{read-lines:qemu-call}
+    -nographic
+    -nodefaults
+    -serial
+    stdio
+    -netdev
+    user,id=n0,restrict=on
+    -device
+    virtio-net-pci,netdev=n0
+    -kernel
+    %{dep:main.exe}
+    -append
+    "netdev.ip=10.0.2.15/24 -- %{env:UNIKERNEL_CMDLINE=default}"))))
 
 (rule
  (alias runtest)

@@ -26,6 +26,7 @@ check() {
 case "$1" in
   amd64)
     check qemu-system-x86_64
+    two -device isa-debug-exit
     machine=q35
     ;;
   arm64)
