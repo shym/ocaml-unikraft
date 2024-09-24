@@ -105,6 +105,24 @@ $(CONFIG): dummykernel/$(PLAT)-$(TGTARCH).config \
 	    touch $@; \
 	fi
 
+# Build the intermediate configuration file from configuration chunks
+CONFIG_CHUNKS := arch/$(TGTARCH) plat/$(PLAT)
+CONFIG_CHUNKS += libs/base libs/lwip libs/musl
+CONFIG_CHUNKS += opts/base opts/debug
+
+dummykernel/$(PLAT)-$(TGTARCH).config: \
+  $(addprefix dummykernel/config/, $(CONFIG_CHUNKS))
+	cat $^ > $@
+
+# Rebuild all the full configurations
+.PHONY: fullconfigs
+fullconfigs:
+	+for p in qemu fc xen; do \
+	    for a in x86_64 arm64; do \
+	        $(MAKE) PLAT=$$p TGTARCH=$$a dummykernel/$$p-$$a.fullconfig ; \
+	    done \
+	done
+
 $(BEBLDLIBDIR)/Makefile: | $(BEBLDLIBDIR)
 	test -e $(UNIKRAFT)/Makefile
 	$(SYMLINK) $(UNIKRAFT)/Makefile $@

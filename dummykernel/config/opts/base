@@ -1,0 +1,6 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2024 Samuel Hym, Tarides <samuel@tarides.com>
+
+CONFIG_UK_NAME="dummykernel"
+
+CONFIG_DEBUG_SYMBOLS_LVL2=y
