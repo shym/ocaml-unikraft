@@ -101,6 +101,12 @@ $(CONFIG): dummykernel/$(PLAT)-$(TGTARCH).config \
 	if [ -e .git -a "`uname`" = Linux ]; then \
 	    cp $< $@; \
 	    $(UKMAKE) olddefconfig; \
+	    sed -e '/Unikraft.*Configuration/d' \
+	        -e '/CONFIG_UK_FULLVERSION/d' \
+	        -e '/CONFIG_HOST_ARCH/d' \
+	        -e '/CONFIG_UK_BASE/d' \
+	        -e '/CONFIG_UK_APP/d' \
+	        -i $@ ; \
 	else \
 	    touch $@; \
 	fi
