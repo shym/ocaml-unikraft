@@ -108,7 +108,9 @@ $(CONFIG): dummykernel/$(PLAT)-$(TGTARCH).config \
 # Build the intermediate configuration file from configuration chunks
 CONFIG_CHUNKS := arch/$(TGTARCH) plat/$(PLAT)
 CONFIG_CHUNKS += libs/base libs/lwip libs/musl
-CONFIG_CHUNKS += opts/base opts/debug
+CONFIG_CHUNKS += opts/base
+# The full debug info is really verbose
+# CONFIG_CHUNKS += opts/debug
 
 dummykernel/$(PLAT)-$(TGTARCH).config: \
   $(addprefix dummykernel/config/, $(CONFIG_CHUNKS))
