@@ -135,6 +135,12 @@ $(BEBLDLIBDIR)/Makefile: | $(BEBLDLIBDIR)
 	test -e $(UNIKRAFT)/Makefile
 	$(SYMLINK) $(UNIKRAFT)/Makefile $@
 
+# Trampoline target to build a Unikraft Makefile target, such as menuconfig,
+# with all the proper options set
+%.unikraft: | $(CONFIG) $(BEBLDLIBDIR)/Makefile $(LIB)/unikraft \
+    $(MUSLARCHIVEPATH) $(LIBMUSL) $(LWIPARCHIVEPATH) $(LIBLWIP)
+	+$(UKMAKE) $*
+
 
 # EXTRACTION OF BUILD INFO
 ############################
