@@ -5,18 +5,12 @@
 #################
 
 # Target platform: qemu, fc or xen
-ifeq ("$(origin PLAT)","undefined")
-PLAT := qemu
-endif
+PLAT ?= qemu
 # Target architecture: x86_64 or arm64
-ifeq ("$(origin TGTARCH)","undefined")
-TGTARCH := x86_64
-endif
+TGTARCH ?= x86_64
 STDARCH := $(subst arm64,aarch64,$(TGTARCH))
 # Installation prefix for OCaml
-ifeq ("$(origin prefix)","undefined")
-prefix := /usr/local
-endif
+prefix ?= /usr/local
 
 BLDLIB := _build/lib
 BLDSHARE := _build/share
@@ -27,9 +21,7 @@ SHARE := $(BLDSHARE)
 BIN := $(BLDBIN)
 
 # Absolute path to the Unikraft sources
-ifeq ("$(origin UNIKRAFT)","undefined")
-UNIKRAFT := $(LIB)/unikraft
-endif
+UNIKRAFT ?= $(LIB)/unikraft
 ifeq ("$(filter /%,$(UNIKRAFT))","")
 override UNIKRAFT := "$$PWD"/$(UNIKRAFT)
 endif
