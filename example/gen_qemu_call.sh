@@ -54,7 +54,7 @@ case "$emulate_cpu,$(uname -m),$1" in
     ;;
   *,arm64)
     two -machine "$machine"
-    two -cpu cortex-a53
+    two -cpu max
     ;;
   *,amd64)
     two -machine "$machine"
