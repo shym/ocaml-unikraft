@@ -9,8 +9,13 @@ PLAT ?= qemu
 # Target architecture: x86_64 or arm64
 TGTARCH ?= x86_64
 STDARCH := $(subst arm64,aarch64,$(TGTARCH))
+# Unikraft external libraries (musl, lwip) to include
+EXTLIBS ?= musl lwip
 # Installation prefix for OCaml
 prefix ?= /usr/local
+
+EMPTY =
+SPACE = $(EMPTY) $(EMPTY)
 
 BLDLIB := _build/lib
 BLDSHARE := _build/share
@@ -57,6 +62,16 @@ MUSLARCHIVEPATH := $(BEBLDLIBDIR)/libmusl/$(MUSLARCHIVE)
 LIBLWIP := _build/libs/lwip
 LWIPARCHIVE := $(wildcard lwip-*.zip)
 LWIPARCHIVEPATH := $(BEBLDLIBDIR)/liblwip/$(patsubst lwip-%,%,$(LWIPARCHIVE))
+
+EXTLIBSDEPS := $(addprefix _build/libs/,$(EXTLIBS))
+EXTLIBSARCHIVES :=
+ifneq ("$(findstring musl,$(EXTLIBS))","")
+EXTLIBSARCHIVES := $(EXTLIBSARCHIVES) $(MUSLARCHIVEPATH)
+endif
+ifneq ("$(findstring lwip,$(EXTLIBS))","")
+EXTLIBSARCHIVES := $(EXTLIBSARCHIVES) $(LWIPARCHIVEPATH)
+endif
+
 CONFIG := dummykernel/$(PLAT)-$(TGTARCH).fullconfig
 
 UKMAKE := umask 0022 && \
@@ -64,13 +79,13 @@ UKMAKE := umask 0022 && \
        CONFIG_UK_BASE="$(UNIKRAFT)/" \
        O="$$PWD/$(BEBLDLIBDIR)/" \
        A="$$PWD/dummykernel/" \
-       L="$$PWD/$(LIBMUSL):$$PWD/$(LIBLWIP)" \
+       L="$(subst $(SPACE),:,$(addprefix $$PWD/,$(EXTLIBSDEPS)))" \
        N=dummykernel \
        C="$$PWD/$(CONFIG)"
 
 # Main build rule for the dummy kernel
 $(BACKENDBUILT): $(CONFIG) | $(BEBLDLIBDIR)/Makefile $(LIB)/unikraft \
-    $(MUSLARCHIVEPATH) $(LIBMUSL) $(LWIPARCHIVEPATH) $(LIBLWIP)
+    $(EXTLIBSDEPS) $(EXTLIBSARCHIVES)
 	+$(UKMAKE) sub_make_exec=1
 	touch $@
 
@@ -89,7 +104,7 @@ $(LWIPARCHIVEPATH): $(LWIPARCHIVE)
 # Enabled only on Linux (requirement of the olddefconfig target) and in
 # development (no need to rebuild the configuration in release)
 $(CONFIG): dummykernel/$(PLAT)-$(TGTARCH).config \
-    | $(BEBLDLIBDIR)/Makefile $(LIBMUSL) $(LIBLWIP)
+    | $(BEBLDLIBDIR)/Makefile $(EXTLIBSDEPS)
 	if [ -e .git -a "`uname`" = Linux ]; then \
 	    cp $< $@; \
 	    $(UKMAKE) olddefconfig; \
@@ -130,7 +145,7 @@ $(BEBLDLIBDIR)/Makefile: | $(BEBLDLIBDIR)
 # Trampoline target to build a Unikraft Makefile target, such as menuconfig,
 # with all the proper options set
 %.unikraft: | $(CONFIG) $(BEBLDLIBDIR)/Makefile $(LIB)/unikraft \
-    $(MUSLARCHIVEPATH) $(LIBMUSL) $(LWIPARCHIVEPATH) $(LIBLWIP)
+    $(EXTLIBSDEPS) $(EXTLIBSARCHIVES)
 	+$(UKMAKE) $*
 
 
