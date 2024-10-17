@@ -123,7 +123,7 @@ fullconfigs:
 	    done \
 	done
 
-$(BEBLDLIBDIR)/Makefile: | $(BEBLDLIBDIR)
+$(BEBLDLIBDIR)/Makefile: | $(BEBLDLIBDIR) $(LIB)/unikraft
 	test -e $(UNIKRAFT)/Makefile
 	$(SYMLINK) $(UNIKRAFT)/Makefile $@
 
@@ -319,7 +319,13 @@ $(ALLDIRS):
 	mkdir -p $@
 
 _build/lib/unikraft: | _build/lib
-	$(SYMLINK) $(UNIKRAFT) $@
+	@if test $(UNIKRAFT) '=' "$$PWD"/$@ ; then \
+	    echo Cannot find Unikraft sources, run: $(MAKE) UNIKRAFT=...; \
+	    exit 1; \
+	else \
+	    echo $(SYMLINK) $(UNIKRAFT) $@ ; \
+	    $(SYMLINK) $(UNIKRAFT) $@ ; \
+	fi
 
 .PHONY: clean
 clean:
