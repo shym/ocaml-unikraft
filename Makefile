@@ -120,7 +120,13 @@ $(CONFIG): dummykernel/$(PLAT)-$(TGTARCH).config \
 
 # Build the intermediate configuration file from configuration chunks
 CONFIG_CHUNKS := arch/$(TGTARCH) plat/$(PLAT)
-CONFIG_CHUNKS += libs/base libs/lwip libs/musl
+CONFIG_CHUNKS += libs/base
+ifneq ("$(findstring musl,$(EXTLIBS))","")
+CONFIG_CHUNKS += libs/musl
+endif
+ifneq ("$(findstring lwip,$(EXTLIBS))","")
+CONFIG_CHUNKS += libs/lwip
+endif
 CONFIG_CHUNKS += opts/base
 # The full debug info is really verbose
 # CONFIG_CHUNKS += opts/debug
