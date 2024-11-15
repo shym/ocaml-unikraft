@@ -23,7 +23,7 @@ BIN := $(BLDBIN)
 # Absolute path to the Unikraft sources
 UNIKRAFT ?= $(LIB)/unikraft
 ifeq ("$(filter /%,$(UNIKRAFT))","")
-override UNIKRAFT := "$$PWD"/$(UNIKRAFT)
+override UNIKRAFT := $$PWD/$(UNIKRAFT)
 endif
 
 # Tar command that extracts an archive stripping the first directory
@@ -124,8 +124,8 @@ fullconfigs:
 	done
 
 $(BEBLDLIBDIR)/Makefile: | $(BEBLDLIBDIR) $(LIB)/unikraft
-	test -e $(UNIKRAFT)/Makefile
-	$(SYMLINK) $(UNIKRAFT)/Makefile $@
+	test -e "$(UNIKRAFT)/Makefile"
+	$(SYMLINK) "$(UNIKRAFT)/Makefile" $@
 
 # Trampoline target to build a Unikraft Makefile target, such as menuconfig,
 # with all the proper options set
@@ -319,12 +319,12 @@ $(ALLDIRS):
 	mkdir -p $@
 
 _build/lib/unikraft: | _build/lib
-	@if test $(UNIKRAFT) '=' "$$PWD"/$@ ; then \
+	@if test "$(UNIKRAFT)" '=' "$$PWD"/$@ ; then \
 	    echo Cannot find Unikraft sources, run: $(MAKE) UNIKRAFT=...; \
 	    exit 1; \
 	else \
-	    echo $(SYMLINK) $(UNIKRAFT) $@ ; \
-	    $(SYMLINK) $(UNIKRAFT) $@ ; \
+	    echo $(SYMLINK) "$(UNIKRAFT)" $@ ; \
+	    $(SYMLINK) "$(UNIKRAFT)" $@ ; \
 	fi
 
 .PHONY: clean
