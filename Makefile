@@ -5,10 +5,10 @@
 #################
 
 # Target platform: qemu, fc or xen
-PLAT ?= qemu
+OCUKPLAT ?= qemu
 # Target architecture: x86_64 or arm64
-TGTARCH ?= x86_64
-STDARCH := $(subst arm64,aarch64,$(TGTARCH))
+OCUKARCH ?= x86_64
+STDARCH := $(subst arm64,aarch64,$(OCUKARCH))
 # Installation prefix for OCaml
 prefix ?= /usr/local
 
@@ -33,15 +33,15 @@ HARDLINK := ln -f
 # Create a symbolic link
 SYMLINK := ln -sf
 
-BACKENDPKG := ocaml-unikraft-backend-$(PLAT)-$(TGTARCH)
-TOOLCHAINPKG := ocaml-unikraft-toolchain-$(TGTARCH)
-OCAMLPKG := ocaml-unikraft-$(TGTARCH)
+BACKENDPKG := ocaml-unikraft-backend-$(OCUKPLAT)-$(OCUKARCH)
+TOOLCHAINPKG := ocaml-unikraft-toolchain-$(OCUKARCH)
+OCAMLPKG := ocaml-unikraft-$(OCUKARCH)
 BELIBDIR := $(LIB)/$(BACKENDPKG)
 BEBLDLIBDIR := $(BLDLIB)/$(BACKENDPKG)
 SHAREDIR := $(SHARE)/$(BACKENDPKG)
 BLDSHAREDIR := $(BLDSHARE)/$(BACKENDPKG)
 # Dummy files that are touched when the backend and the compiler have been built
-BACKENDBUILT := _build/$(PLAT)-$(TGTARCH)_built
+BACKENDBUILT := _build/$(OCUKPLAT)-$(OCUKARCH)_built
 OCAMLBUILT := _build/ocaml_built
 
 .PHONY: all
@@ -57,7 +57,7 @@ MUSLARCHIVEPATH := $(BEBLDLIBDIR)/libmusl/$(MUSLARCHIVE)
 LIBLWIP := _build/libs/lwip
 LWIPARCHIVE := $(wildcard lwip-*.zip)
 LWIPARCHIVEPATH := $(BEBLDLIBDIR)/liblwip/$(patsubst lwip-%,%,$(LWIPARCHIVE))
-CONFIG := dummykernel/$(PLAT)-$(TGTARCH).fullconfig
+CONFIG := dummykernel/$(OCUKPLAT)-$(OCUKARCH).fullconfig
 
 UKMAKE := umask 0022 && \
    $(MAKE) -C $(BEBLDLIBDIR) \
@@ -88,7 +88,7 @@ $(LWIPARCHIVEPATH): $(LWIPARCHIVE)
 
 # Enabled only on Linux (requirement of the olddefconfig target) and in
 # development (no need to rebuild the configuration in release)
-$(CONFIG): dummykernel/$(PLAT)-$(TGTARCH).config \
+$(CONFIG): dummykernel/$(OCUKPLAT)-$(OCUKARCH).config \
     | $(BEBLDLIBDIR)/Makefile $(LIBMUSL) $(LIBLWIP)
 	if [ -e .git -a "`uname`" = Linux ]; then \
 	    cp $< $@; \
@@ -104,13 +104,13 @@ $(CONFIG): dummykernel/$(PLAT)-$(TGTARCH).config \
 	fi
 
 # Build the intermediate configuration file from configuration chunks
-CONFIG_CHUNKS := arch/$(TGTARCH) plat/$(PLAT)
+CONFIG_CHUNKS := arch/$(OCUKARCH) plat/$(OCUKPLAT)
 CONFIG_CHUNKS += libs/base libs/lwip libs/musl
 CONFIG_CHUNKS += opts/base
 # The full debug info is really verbose
 # CONFIG_CHUNKS += opts/debug
 
-dummykernel/$(PLAT)-$(TGTARCH).config: \
+dummykernel/$(OCUKPLAT)-$(OCUKARCH).config: \
   $(addprefix dummykernel/config/, $(CONFIG_CHUNKS))
 	cat $^ > $@
 
@@ -119,7 +119,7 @@ dummykernel/$(PLAT)-$(TGTARCH).config: \
 fullconfigs:
 	+for p in qemu fc xen; do \
 	    for a in x86_64 arm64; do \
-	        $(MAKE) PLAT=$$p TGTARCH=$$a dummykernel/$$p-$$a.fullconfig ; \
+	        $(MAKE) OCUKPLAT=$$p OCUKARCH=$$a dummykernel/$$p-$$a.fullconfig ; \
 	    done \
 	done
 
@@ -179,7 +179,7 @@ $(BLDSHAREDIR)/poststeps: $(BLDSHAREDIR)/.poststeps.log $(BLDSHAREDIR)/.suffix
 	    -e '/sh provided_syscalls.in/d' \
 	    -e '/sh libraries.in/d' $(BLDSHAREDIR)/.poststeps.log \
 	| bash extract_postprocessing.sh "$(UNIKRAFT)" \
-	    "$$PWD/$(BEBLDLIBDIR)" dummykernel_$(PLAT)-$(TGTARCH) \
+	    "$$PWD/$(BEBLDLIBDIR)" dummykernel_$(OCUKPLAT)-$(OCUKARCH) \
 	    $(BLDSHAREDIR)/.suffix > $@
 
 .PHONY: backend
@@ -190,7 +190,7 @@ backend: $(BACKENDBUILT) \
 # TOOLCHAIN
 #############
 
-SHAREDIRS := $(wildcard $(SHARE)/ocaml-unikraft-backend-*-$(TGTARCH))
+SHAREDIRS := $(wildcard $(SHARE)/ocaml-unikraft-backend-*-$(OCUKARCH))
 ifeq ("$(strip $(SHAREDIRS))","")
 SHAREDIRS := $(BLDSHAREDIR)
 endif
@@ -204,7 +204,7 @@ TOOLCHAIN := $(addprefix $(BIN)/,$(TOOLCHAIN))
 
 $(BLDBIN)/$(STDARCH)-unikraft-ocaml-%: gen_toolchain_tool.sh $(CONFIGFILES) \
     | $(BLDBIN)
-	./gen_toolchain_tool.sh $(TGTARCH) $(SHARE) $* > $@
+	./gen_toolchain_tool.sh $(OCUKARCH) $(SHARE) $* > $@
 	chmod +x $@
 
 # Fetch the stdatomic.h header and its freestanding dependencies from the
@@ -261,9 +261,9 @@ $(OCAMLBUILT): ocaml/Makefile.config | _build
 	cd ocaml && ocamlrun tools/stripdebug ocamlopt ocamlopt.tmp
 	touch $@
 
-OCAMLFIND_CONF := _build/unikraft_$(TGTARCH).conf
+OCAMLFIND_CONF := _build/unikraft_$(OCUKARCH).conf
 $(OCAMLFIND_CONF): gen_ocamlfind_conf.sh $(OCAMLBUILT)
-	./gen_ocamlfind_conf.sh $(TGTARCH) $(prefix) > $@
+	./gen_ocamlfind_conf.sh $(OCUKARCH) $(prefix) > $@
 
 .PHONY: compiler
 compiler: $(OCAMLBUILT) $(OCAMLFIND_CONF) _build/empty
@@ -273,29 +273,29 @@ compiler: $(OCAMLBUILT) $(OCAMLFIND_CONF) _build/empty
 ###################################################
 
 _build/unikraft.conf: | _build
-	./gen_ocamlfind_conf.sh default $(TGTARCH) $(prefix) > $@
+	./gen_ocamlfind_conf.sh default $(OCUKARCH) $(prefix) > $@
 
 # INSTALL
 ###########
 
 $(BACKENDPKG).install: gen_backend_install.sh $(BACKENDBUILT) \
     $(addprefix $(SHAREDIR)/,cc cflags ldflags poststeps toolprefix)
-	./gen_backend_install.sh $(PLAT)-$(TGTARCH) > $@
+	./gen_backend_install.sh $(OCUKPLAT)-$(OCUKARCH) > $@
 
-ocaml-unikraft-toolchain-$(TGTARCH).install: gen_toolchain_install.sh \
+ocaml-unikraft-toolchain-$(OCUKARCH).install: gen_toolchain_install.sh \
     $(BLDTOOLCHAIN) $(BLDSTDATOMIC_H)
-	./gen_toolchain_install.sh $(TGTARCH) $(BLDTOOLCHAIN) > $@
+	./gen_toolchain_install.sh $(OCUKARCH) $(BLDTOOLCHAIN) > $@
 
 OCAML_DOT_INSTALL_CHUNKS := $(addprefix _build/ocaml.install, .lib .libexec)
 $(OCAML_DOT_INSTALL_CHUNKS): gen_ocaml_install.sh | _build ocaml/Makefile.config
 	MAKE="$(MAKE)" bash gen_ocaml_install.sh _build/ocaml.install ocaml \
 	    $(prefix)
 
-ocaml-unikraft-$(TGTARCH).install: gen_dot_install.sh \
+ocaml-unikraft-$(OCUKARCH).install: gen_dot_install.sh \
     $(OCAML_DOT_INSTALL_CHUNKS) $(OCAMLFIND_CONF) _build/empty
-	./gen_dot_install.sh _build/ocaml.install $(TGTARCH) > $@
+	./gen_dot_install.sh _build/ocaml.install $(OCUKARCH) > $@
 
-ocaml-unikraft-default-$(TGTARCH).install: _build/unikraft.conf
+ocaml-unikraft-default-$(OCUKARCH).install: _build/unikraft.conf
 	printf 'lib_root: [\n  "%s" { "%s" }\n]\n' $< \
 	  findlib.conf.d/unikraft.conf > $@
 

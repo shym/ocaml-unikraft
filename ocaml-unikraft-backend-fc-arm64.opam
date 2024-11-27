@@ -13,11 +13,11 @@ build: [
     make
     "-j%{jobs}%"
     "UNIKRAFT=%{lib}%/unikraft"
-    "PLAT=fc"
-    "TGTARCH=arm64"
+    "OCUKPLAT=fc"
+    "OCUKARCH=arm64"
     "backend"
   ]
-  [make "PLAT=fc" "TGTARCH=arm64" "%{name}%.install"]
+  [make "OCUKPLAT=fc" "OCUKARCH=arm64" "%{name}%.install"]
 ]
 extra-source "lib-musl.tar.gz" {
   src:

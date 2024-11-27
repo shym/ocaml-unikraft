@@ -13,11 +13,11 @@ build: [
     make
     "-j%{jobs}%"
     "UNIKRAFT=%{lib}%/unikraft"
-    "PLAT=qemu"
-    "TGTARCH=arm64"
+    "OCUKPLAT=qemu"
+    "OCUKARCH=arm64"
     "backend"
   ]
-  [make "PLAT=qemu" "TGTARCH=arm64" "%{name}%.install"]
+  [make "OCUKPLAT=qemu" "OCUKARCH=arm64" "%{name}%.install"]
 ]
 extra-source "lib-musl.tar.gz" {
   src:

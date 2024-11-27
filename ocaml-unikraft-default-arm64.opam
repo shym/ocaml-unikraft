@@ -12,7 +12,7 @@ depends: [
   "ocamlfind"
 ]
 build: [
-  [make "prefix=%{prefix}%" "TGTARCH=arm64" "_build/unikraft.conf"]
-  [make "prefix=%{prefix}%" "TGTARCH=arm64" "%{name}%.install"]
+  [make "prefix=%{prefix}%" "OCUKARCH=arm64" "_build/unikraft.conf"]
+  [make "prefix=%{prefix}%" "OCUKARCH=arm64" "%{name}%.install"]
 ]
 conflict-class: "ocaml-unikraft-default"

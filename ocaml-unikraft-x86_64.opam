@@ -20,7 +20,7 @@ build: [
     "BIN=%{bin}%"
     "LIB=%{lib}%"
     "SHARE=%{share}%"
-    "TGTARCH=x86_64"
+    "OCUKARCH=x86_64"
     "compiler"
   ]
   [
@@ -30,7 +30,7 @@ build: [
     "BIN=%{bin}%"
     "LIB=%{lib}%"
     "SHARE=%{share}%"
-    "TGTARCH=x86_64"
+    "OCUKARCH=x86_64"
     "%{name}%.install"
   ]
 ]

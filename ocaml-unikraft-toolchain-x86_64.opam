@@ -12,6 +12,6 @@ depends: [
   "ocaml-unikraft-backend-qemu-x86_64" | "ocaml-unikraft-backend-fc-x86_64"
 ]
 build: [
-  [make "-j%{jobs}%" "LIB=%{lib}%" "SHARE=%{share}%" "TGTARCH=x86_64" "toolchain"]
-  [make "LIB=%{lib}%" "SHARE=%{share}%" "TGTARCH=x86_64" "%{name}%.install"]
+  [make "-j%{jobs}%" "LIB=%{lib}%" "SHARE=%{share}%" "OCUKARCH=x86_64" "toolchain"]
+  [make "LIB=%{lib}%" "SHARE=%{share}%" "OCUKARCH=x86_64" "%{name}%.install"]
 ]
