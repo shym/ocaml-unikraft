@@ -255,22 +255,16 @@ toolchain: $(BLDTOOLCHAIN) $(BLDSTDATOMIC_H)
 # OCAML COMPILER
 ##################
 
-# Extract sources from ocaml-src.tar.gz (if available, supporting the
-# differences of options between various tar implementations to strip the first
-# directory in the archive) or from the ocaml-src OPAM package and apply patches
-# if there any in `patches/<OCaml version>/`
+# Extract sources from the ocaml-src package and apply patches if there any in
+# `patches/<OCaml version>/`
 ocaml:
-	mkdir -p $@
-	if test -f ocaml-src.tar.gz; then \
-	  if tar --version >/dev/null 2>&1; then \
-	      tar -x -f ocaml-src.tar.gz -z -C $@ --strip-components=1; \
-	    else tar -x -f ocaml-src.tar.gz -z -C $@ -s '/^[^\/]*\///'; \
-	  fi ; \
-	elif opam var ocaml-src:lib; then cp -R `opam var ocaml-src:lib` $@; \
-	else echo Cannot find OCaml sources; false; \
-	fi
-	if test -d "patches/`head -n1 ocaml/VERSION`" ; then \
-	  git apply --directory=$@ "patches/`head -n1 ocaml/VERSION`"/*; \
+# First make sure the ocaml directory doesn't exist, otherwise the cp would
+# create an ocaml-src subdirectory
+	test ! -d $@
+	cp -r "$$(ocamlfind query ocaml-src)" $@
+	VERSION="$$(head -n1 ocaml/VERSION)" ; \
+	if test -d "patches/$$VERSION" ; then \
+	  git apply --directory=$@ "patches/$$VERSION"/*; \
 	fi
 
 # We add $(BLDBIN) inconditionnally, even when using the installed toolchain: as
