@@ -72,7 +72,14 @@ ifneq ("$(findstring lwip,$(OCUKEXTLIBS))","")
 OCUKEXTLIBSARCHIVES := $(OCUKEXTLIBSARCHIVES) $(LWIPARCHIVEPATH)
 endif
 
-CONFIG := dummykernel/$(OCUKPLAT)-$(OCUKARCH).fullconfig
+# The suffix has the form `-liba+libb+libc-optx+opty`
+CONFIG_SUFFIX := \
+   $(subst $(SPACE),,\
+       $(patsubst %,-%,\
+           $(subst $(SPACE),+,$(OCUKEXTLIBS))\
+           $(subst $(SPACE),+,$(OCUKCONFIGOPTS))))
+
+CONFIG := dummykernel/$(OCUKPLAT)-$(OCUKARCH)$(CONFIG_SUFFIX).fullconfig
 
 UKMAKE := umask 0022 && \
    $(MAKE) -C $(BEBLDLIBDIR) \
@@ -103,7 +110,7 @@ $(LWIPARCHIVEPATH): $(LWIPARCHIVE)
 
 # Enabled only on Linux (requirement of the olddefconfig target) and in
 # development (no need to rebuild the configuration in release)
-$(CONFIG): dummykernel/$(OCUKPLAT)-$(OCUKARCH).config \
+$(CONFIG): dummykernel/$(OCUKPLAT)-$(OCUKARCH)$(CONFIG_SUFFIX).config \
     | $(BEBLDLIBDIR)/Makefile $(OCUKEXTLIBSDEPS)
 	if [ -e .git -a "`uname`" = Linux ]; then \
 	    cp $< $@; \
@@ -123,20 +130,27 @@ CONFIG_CHUNKS := arch/$(OCUKARCH) plat/$(OCUKPLAT)
 CONFIG_CHUNKS += libs/base
 CONFIG_CHUNKS += $(addprefix libs/,$(OCUKEXTLIBS))
 CONFIG_CHUNKS += opts/base
-# The full debug info is really verbose
-# CONFIG_CHUNKS += opts/debug
+CONFIG_CHUNKS += $(addprefix opts/,$(OCUKCONFIGOPTS))
 
-dummykernel/$(OCUKPLAT)-$(OCUKARCH).config: \
+dummykernel/$(OCUKPLAT)-$(OCUKARCH)$(CONFIG_SUFFIX).config: \
   $(addprefix dummykernel/config/, $(CONFIG_CHUNKS))
 	cat $^ > $@
+
+.PHONY: fullconfig
+fullconfig: $(CONFIG)
 
 # Rebuild all the full configurations
 .PHONY: fullconfigs
 fullconfigs:
 	+for p in qemu fc xen; do \
-	    for a in x86_64 arm64; do \
-	        $(MAKE) OCUKPLAT=$$p OCUKARCH=$$a dummykernel/$$p-$$a.fullconfig ; \
+	  for a in x86_64 arm64; do \
+	    for l in musl "musl lwip"; do \
+	      for o in "" debug; do \
+	        $(MAKE) OCUKPLAT="$$p" OCUKARCH="$$a" OCUKEXTLIBS="$$l" \
+	          OCUKCONFIGOPTS="$$o" fullconfig ; \
+	      done \
 	    done \
+	  done \
 	done
 
 $(BEBLDLIBDIR)/Makefile: | $(BEBLDLIBDIR) $(LIB)/unikraft
