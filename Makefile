@@ -351,6 +351,10 @@ _build/lib/unikraft: | _build/lib
 	    $(SYMLINK) "$(UNIKRAFT)" $@ ; \
 	fi
 
+.PHONY: opams
+opams:
+	ocaml gen_opams.ml
+
 .PHONY: clean
 clean:
 	rm -rf _build
