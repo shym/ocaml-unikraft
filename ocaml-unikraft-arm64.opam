@@ -11,8 +11,8 @@ depends: [
   "ocaml" {= "5.2.0"}
   "ocaml-unikraft-toolchain-arm64"
   "ocamlfind"
-  "ocaml-src" {build} # to obtain the compiler sources
-  "conf-git" {build} # to patch the compiler sources
+  "ocaml-src" {build}
+  "conf-git" {build}
 ]
 build: [
   [

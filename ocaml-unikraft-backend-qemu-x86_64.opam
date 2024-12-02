@@ -19,22 +19,21 @@ build: [
   ]
   [make "OCUKPLAT=qemu" "OCUKARCH=x86_64" "%{name}%.install"]
 ]
-extra-source "lib-musl.tar.gz" {
-  src:
-    "https://github.com/unikraft/lib-musl/archive/refs/tags/RELEASE-0.17.0.tar.gz"
-  checksum:
-    "sha256=d0f44df097122f65f53325b0d1848fe20929b4b9156c2621c7c1bc8cd66afdef"
-}
-extra-source "musl-1.2.3.tar.gz" {
-  src: "https://www.musl-libc.org/releases/musl-1.2.3.tar.gz"
-  checksum:
-    "sha256=7d5b0b6062521e4627e099e4c9dc8248d32a30285e959b7eecaa780cf8cfd4a4"
-}
+pin-depends: [
+  "unikraft.0.17.0+fix"
+  "git+https://github.com/shym/unikraft.git#66bab9efad04cc4298755f04278b36c6ec353867"
+]
 extra-source "lib-lwip.tar.gz" {
   src:
     "https://github.com/unikraft/lib-lwip/archive/refs/tags/RELEASE-0.17.0.tar.gz"
   checksum:
     "sha256=f90cce7a53f6ad093d1692bb95dd12294148f817a7088e4c981092a76513ad04"
+}
+extra-source "lib-musl.tar.gz" {
+  src:
+    "https://github.com/unikraft/lib-musl/archive/refs/tags/RELEASE-0.17.0.tar.gz"
+  checksum:
+    "sha256=d0f44df097122f65f53325b0d1848fe20929b4b9156c2621c7c1bc8cd66afdef"
 }
 extra-source "lwip-UNIKRAFT-2_1_x.zip" {
   src:
@@ -42,6 +41,8 @@ extra-source "lwip-UNIKRAFT-2_1_x.zip" {
   checksum:
     "sha256=1cf15ac8a70946f49327cfa4bc6923555b8c4ceeb11e4dc4f20e530b674403af"
 }
-pin-depends: [
-  ["unikraft.0.17.0+fix" "git+https://github.com/shym/unikraft.git#66bab9efad04cc4298755f04278b36c6ec353867"]
-]
+extra-source "musl-1.2.3.tar.gz" {
+  src: "https://www.musl-libc.org/releases/musl-1.2.3.tar.gz"
+  checksum:
+    "sha256=7d5b0b6062521e4627e099e4c9dc8248d32a30285e959b7eecaa780cf8cfd4a4"
+}
