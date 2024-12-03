@@ -311,7 +311,7 @@ ocaml-unikraft-toolchain-$(OCUKARCH).install: gen_toolchain_install.sh \
 	./gen_toolchain_install.sh $(OCUKARCH) $(BLDTOOLCHAIN) > $@
 
 OCAML_DOT_INSTALL_CHUNKS := $(addprefix _build/ocaml.install, .lib .libexec)
-$(OCAML_DOT_INSTALL_CHUNKS): gen_ocaml_install.sh $(OCAMLBUILT)
+$(OCAML_DOT_INSTALL_CHUNKS) &: gen_ocaml_install.sh $(OCAMLBUILT)
 	MAKE="$(MAKE)" bash gen_ocaml_install.sh _build/ocaml.install ocaml \
 	    $(prefix)
 
