@@ -153,7 +153,7 @@ description:
 authors: "Samuel Hym"
 license: ["MIT" "LGPL-2.1-or-later WITH OCaml-LGPL-linking-exception"]
 depends: [
-  "ocaml" {= "5.2.0"}
+  "ocaml" {>= "5.2.0" & <= "5.2.1"}
   "ocaml-unikraft-toolchain-%s"
   "ocamlfind"
   "ocaml-src" {build}
