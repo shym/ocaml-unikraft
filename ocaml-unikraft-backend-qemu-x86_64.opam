@@ -24,15 +24,6 @@ build: [
     "OCUKEXTLIBS=musl"
     "OCUKEXTLIBS+=lwip" {ocaml-unikraft-option-lwip:installed}
     "OCUKCONFIGOPTS+=debug" {ocaml-unikraft-option-debug:installed}
-    "backend"
-  ]
-  [
-    make
-    "OCUKPLAT=qemu"
-    "OCUKARCH=x86_64"
-    "OCUKEXTLIBS=musl"
-    "OCUKEXTLIBS+=lwip" {ocaml-unikraft-option-lwip:installed}
-    "OCUKCONFIGOPTS+=debug" {ocaml-unikraft-option-debug:installed}
     "%{name}%.install"
   ]
 ]

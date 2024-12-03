@@ -13,6 +13,5 @@ license: "MIT"
 depends: ["ocaml-unikraft-x86_64" "ocamlfind"]
 conflict-class: "ocaml-unikraft-default"
 build: [
-  [make "prefix=%{prefix}%" "OCUKARCH=x86_64" "_build/unikraft.conf"]
   [make "prefix=%{prefix}%" "OCUKARCH=x86_64" "%{name}%.install"]
 ]

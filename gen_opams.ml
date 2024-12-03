@@ -56,15 +56,6 @@ build: [
     "OCUKEXTLIBS=musl"
     "OCUKEXTLIBS+=lwip" {ocaml-unikraft-option-lwip:installed}
     "OCUKCONFIGOPTS+=debug" {ocaml-unikraft-option-debug:installed}
-    "backend"
-  ]
-  [
-    make
-    "OCUKPLAT=%s"
-    "OCUKARCH=%s"
-    "OCUKEXTLIBS=musl"
-    "OCUKEXTLIBS+=lwip" {ocaml-unikraft-option-lwip:installed}
-    "OCUKCONFIGOPTS+=debug" {ocaml-unikraft-option-debug:installed}
     "%%{name}%%.install"
   ]
 ]
@@ -96,7 +87,7 @@ extra-source "musl-1.2.3.tar.gz" {
     "sha256=7d5b0b6062521e4627e099e4c9dc8248d32a30285e959b7eecaa780cf8cfd4a4"
 }
 |}
-        short_name arch short_name arch)
+        short_name arch)
 
 let option_package option =
   let short_name, long_name = option in
@@ -134,12 +125,11 @@ build: [
     "LIB=%%{lib}%%"
     "SHARE=%%{share}%%"
     "OCUKARCH=%s"
-    "toolchain"
+    "%%{name}%%.install"
   ]
-  [make "LIB=%%{lib}%%" "SHARE=%%{share}%%" "OCUKARCH=%s" "%%{name}%%.install"]
 ]
 |}
-        version_ocaml_unikraft arch arch arch arch arch arch)
+        version_ocaml_unikraft arch arch arch arch arch)
 
 let compiler_package arch =
   let package_name = Printf.sprintf "ocaml-unikraft-%s" arch in
@@ -168,21 +158,11 @@ build: [
     "LIB=%%{lib}%%"
     "SHARE=%%{share}%%"
     "OCUKARCH=%s"
-    "compiler"
-  ]
-  [
-    make
-    "-j%%{jobs}%%"
-    "prefix=%%{prefix}%%"
-    "BIN=%%{bin}%%"
-    "LIB=%%{lib}%%"
-    "SHARE=%%{share}%%"
-    "OCUKARCH=%s"
     "%%{name}%%.install"
   ]
 ]
 |}
-        version_ocaml_unikraft arch arch arch arch arch)
+        version_ocaml_unikraft arch arch arch arch)
 
 let default_compiler_package arch =
   let package_name = Printf.sprintf "ocaml-unikraft-default-%s" arch in
@@ -199,11 +179,10 @@ license: "MIT"
 depends: ["ocaml-unikraft-%s" "ocamlfind"]
 conflict-class: "ocaml-unikraft-default"
 build: [
-  [make "prefix=%%{prefix}%%" "OCUKARCH=%s" "_build/unikraft.conf"]
   [make "prefix=%%{prefix}%%" "OCUKARCH=%s" "%%{name}%%.install"]
 ]
 |}
-        version_ocaml_unikraft arch arch arch arch arch)
+        version_ocaml_unikraft arch arch arch arch)
 
 let default_backend_package backend =
   let short_name, long_name = backend in

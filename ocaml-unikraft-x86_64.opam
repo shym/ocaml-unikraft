@@ -25,16 +25,6 @@ build: [
     "LIB=%{lib}%"
     "SHARE=%{share}%"
     "OCUKARCH=x86_64"
-    "compiler"
-  ]
-  [
-    make
-    "-j%{jobs}%"
-    "prefix=%{prefix}%"
-    "BIN=%{bin}%"
-    "LIB=%{lib}%"
-    "SHARE=%{share}%"
-    "OCUKARCH=x86_64"
     "%{name}%.install"
   ]
 ]

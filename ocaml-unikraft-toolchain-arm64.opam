@@ -20,7 +20,6 @@ build: [
     "LIB=%{lib}%"
     "SHARE=%{share}%"
     "OCUKARCH=arm64"
-    "toolchain"
+    "%{name}%.install"
   ]
-  [make "LIB=%{lib}%" "SHARE=%{share}%" "OCUKARCH=arm64" "%{name}%.install"]
 ]
