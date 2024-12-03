@@ -1,0 +1,10 @@
+opam-version: "2.0"
+name: "ocaml-unikraft-option-debug"
+maintainer: "samuel@tarides.com"
+homepage: "https://github.com/shym/ocaml-unikraft/"
+bug-reports: "https://github.com/shym/ocaml-unikraft/issues"
+version: "0.17.0"
+synopsis:
+  "Virtual package to enable debugging in the Unikraft backends"
+authors: "Samuel Hym"
+license: "MIT"

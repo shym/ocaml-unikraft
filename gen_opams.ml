@@ -8,6 +8,7 @@ let version_ocaml_unikraft = "0.0.1"
 let version_unikraft = "0.17.0"
 let archs = [ "arm64"; "x86_64" ]
 let backends = [ ("fc", "FireCracker"); ("qemu", "QEMU") ]
+let options = [ ("debug", "debugging"); ("lwip", "the lwIP library") ]
 
 let with_package package_name gen =
   let filename = Printf.sprintf "%s.opam" package_name in
@@ -36,6 +37,15 @@ license: ["MIT" "BSD-3-Clause" "GPL-2.0-only"]
 depends: [
   "unikraft" {= "0.17.0+fix"}
 ]
+depopts: [|}
+        version_unikraft long_name arch;
+      List.iter
+        (fun (opt, _) ->
+          Printf.fprintf out "\n  \"ocaml-unikraft-option-%s\"" opt)
+        options;
+      Printf.fprintf out
+        {|
+]
 build: [
   [
     make
@@ -43,9 +53,20 @@ build: [
     "UNIKRAFT=%%{lib}%%/unikraft"
     "OCUKPLAT=%s"
     "OCUKARCH=%s"
+    "OCUKEXTLIBS=musl"
+    "OCUKEXTLIBS+=lwip" {ocaml-unikraft-option-lwip:installed}
+    "OCUKCONFIGOPTS+=debug" {ocaml-unikraft-option-debug:installed}
     "backend"
   ]
-  [make "OCUKPLAT=%s" "OCUKARCH=%s" "%%{name}%%.install"]
+  [
+    make
+    "OCUKPLAT=%s"
+    "OCUKARCH=%s"
+    "OCUKEXTLIBS=musl"
+    "OCUKEXTLIBS+=lwip" {ocaml-unikraft-option-lwip:installed}
+    "OCUKCONFIGOPTS+=debug" {ocaml-unikraft-option-debug:installed}
+    "%%{name}%%.install"
+  ]
 ]
 pin-depends: [
   "unikraft.0.17.0+fix"
@@ -75,7 +96,21 @@ extra-source "musl-1.2.3.tar.gz" {
     "sha256=7d5b0b6062521e4627e099e4c9dc8248d32a30285e959b7eecaa780cf8cfd4a4"
 }
 |}
-        version_unikraft long_name arch short_name arch short_name arch)
+        short_name arch short_name arch)
+
+let option_package option =
+  let short_name, long_name = option in
+  let package_name = Printf.sprintf "ocaml-unikraft-option-%s" short_name in
+  with_package package_name (fun out ->
+      Printf.fprintf out
+        {|
+version: "%s"
+synopsis:
+  "Virtual package to enable %s in the Unikraft backends"
+authors: "Samuel Hym"
+license: "MIT"
+|}
+        version_unikraft long_name)
 
 let toolchain_package arch =
   let package_name = Printf.sprintf "ocaml-unikraft-toolchain-%s" arch in
@@ -208,6 +243,7 @@ depends: ["ocaml-unikraft-default-x86_64" | "ocaml-unikraft-default-arm64"]
 
 let _ =
   List.iter (fun arch -> List.iter (backend_package arch) backends) archs;
+  List.iter option_package options;
   List.iter toolchain_package archs;
   List.iter compiler_package archs;
   List.iter default_compiler_package archs;

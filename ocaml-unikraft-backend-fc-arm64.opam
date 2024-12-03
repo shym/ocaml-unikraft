@@ -10,6 +10,10 @@ license: ["MIT" "BSD-3-Clause" "GPL-2.0-only"]
 depends: [
   "unikraft" {= "0.17.0+fix"}
 ]
+depopts: [
+  "ocaml-unikraft-option-debug"
+  "ocaml-unikraft-option-lwip"
+]
 build: [
   [
     make
@@ -17,9 +21,20 @@ build: [
     "UNIKRAFT=%{lib}%/unikraft"
     "OCUKPLAT=fc"
     "OCUKARCH=arm64"
+    "OCUKEXTLIBS=musl"
+    "OCUKEXTLIBS+=lwip" {ocaml-unikraft-option-lwip:installed}
+    "OCUKCONFIGOPTS+=debug" {ocaml-unikraft-option-debug:installed}
     "backend"
   ]
-  [make "OCUKPLAT=fc" "OCUKARCH=arm64" "%{name}%.install"]
+  [
+    make
+    "OCUKPLAT=fc"
+    "OCUKARCH=arm64"
+    "OCUKEXTLIBS=musl"
+    "OCUKEXTLIBS+=lwip" {ocaml-unikraft-option-lwip:installed}
+    "OCUKCONFIGOPTS+=debug" {ocaml-unikraft-option-debug:installed}
+    "%{name}%.install"
+  ]
 ]
 pin-depends: [
   "unikraft.0.17.0+fix"
