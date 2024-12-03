@@ -63,5 +63,4 @@ jobs:
           cd example
           opam exec -- dune runtest
           UNIKERNEL_CMDLINE=sleep opam exec -- dune runtest
-        # Currently the ARM port is failing
         continue-on-error: true
