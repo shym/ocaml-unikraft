@@ -13,6 +13,7 @@ depends: [
 depopts: [
   "ocaml-unikraft-option-debug"
   "ocaml-unikraft-option-lwip"
+  "ocaml-unikraft-option-ocaml-net-stack"
 ]
 build: [
   [

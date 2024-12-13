@@ -8,7 +8,13 @@ let version_ocaml_unikraft = "0.0.1"
 let version_unikraft = "0.17.0"
 let archs = [ "arm64"; "x86_64" ]
 let backends = [ ("fc", "FireCracker"); ("qemu", "QEMU") ]
-let options = [ ("debug", "debugging"); ("lwip", "the lwIP library") ]
+
+let options =
+  [
+    ("debug", "debugging", []);
+    ("lwip", "the lwIP library", [ "network-stack" ]);
+    ("ocaml-net-stack", "OCaml network stack", [ "network-stack" ]);
+  ]
 
 let with_package package_name gen =
   let filename = Printf.sprintf "%s.opam" package_name in
@@ -40,7 +46,7 @@ depends: [
 depopts: [|}
         version_unikraft long_name arch;
       List.iter
-        (fun (opt, _) ->
+        (fun (opt, _, _) ->
           Printf.fprintf out "\n  \"ocaml-unikraft-option-%s\"" opt)
         options;
       Printf.fprintf out
@@ -90,7 +96,7 @@ extra-source "musl-1.2.3.tar.gz" {
         short_name arch)
 
 let option_package option =
-  let short_name, long_name = option in
+  let short_name, long_name, conflicts = option in
   let package_name = Printf.sprintf "ocaml-unikraft-option-%s" short_name in
   with_package package_name (fun out ->
       Printf.fprintf out
@@ -101,7 +107,15 @@ synopsis:
 authors: "Samuel Hym"
 license: "MIT"
 |}
-        version_unikraft long_name)
+        version_unikraft long_name;
+      match conflicts with
+      | [] -> ()
+      | _ ->
+          Printf.fprintf out "conflict-class: [\n";
+          List.iter
+            (Printf.fprintf out "  \"ocaml-unikraft-%s\"\n")
+            conflicts;
+          Printf.fprintf out "]\n")
 
 let toolchain_package arch =
   let package_name = Printf.sprintf "ocaml-unikraft-toolchain-%s" arch in

@@ -1,11 +1,11 @@
 opam-version: "2.0"
-name: "ocaml-unikraft-option-lwip"
+name: "ocaml-unikraft-option-ocaml-net-stack"
 maintainer: "samuel@tarides.com"
 homepage: "https://github.com/shym/ocaml-unikraft/"
 bug-reports: "https://github.com/shym/ocaml-unikraft/issues"
 version: "0.17.0"
 synopsis:
-  "Virtual package to enable the lwIP library in the Unikraft backends"
+  "Virtual package to enable OCaml network stack in the Unikraft backends"
 authors: "Samuel Hym"
 license: "MIT"
 conflict-class: [
