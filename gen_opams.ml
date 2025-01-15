@@ -5,7 +5,7 @@
 (* OCaml script to generate all the *.opam files *)
 
 let version_ocaml_unikraft = "0.0.1"
-let version_unikraft = "0.17.0"
+let version_unikraft = "0.18.0"
 let archs = [ "arm64"; "x86_64" ]
 let backends = [ ("fc", "FireCracker"); ("qemu", "QEMU") ]
 
@@ -41,7 +41,7 @@ synopsis: "%s/%s Unikraft backend for OCaml"
 authors: ["Samuel Hym" "Unikraft contributors"]
 license: ["MIT" "BSD-3-Clause" "GPL-2.0-only"]
 depends: [
-  "unikraft" {= "0.17.0+fix"}
+  "unikraft" {= version}
 ]
 depopts: [|}
         version_unikraft long_name arch;
@@ -65,21 +65,17 @@ build: [
     "%%{name}%%.install"
   ]
 ]
-pin-depends: [
-  "unikraft.0.17.0+fix"
-  "git+https://github.com/shym/unikraft.git#66bab9efad04cc4298755f04278b36c6ec353867"
-]
 extra-source "lib-lwip.tar.gz" {
   src:
-    "https://github.com/unikraft/lib-lwip/archive/refs/tags/RELEASE-0.17.0.tar.gz"
+    "https://github.com/unikraft/lib-lwip/archive/refs/tags/RELEASE-0.18.0.tar.gz"
   checksum:
-    "sha256=f90cce7a53f6ad093d1692bb95dd12294148f817a7088e4c981092a76513ad04"
+    "sha256=f785f9523e27704cf86050c5d8108ffbc45f8bdf6dccacbf5dd6f3dfcadbdb77"
 }
 extra-source "lib-musl.tar.gz" {
   src:
-    "https://github.com/unikraft/lib-musl/archive/refs/tags/RELEASE-0.17.0.tar.gz"
+    "https://github.com/unikraft/lib-musl/archive/refs/tags/RELEASE-0.18.0.tar.gz"
   checksum:
-    "sha256=d0f44df097122f65f53325b0d1848fe20929b4b9156c2621c7c1bc8cd66afdef"
+    "sha256=b51afee0227c0c8c419dd001fb6b6f57b529e5cadcd437afdd05e2e8667a1e2e"
 }
 extra-source "lwip-UNIKRAFT-2_1_x.zip" {
   src:

@@ -3,7 +3,7 @@ name: "ocaml-unikraft-option-ocaml-net-stack"
 maintainer: "samuel@tarides.com"
 homepage: "https://github.com/shym/ocaml-unikraft/"
 bug-reports: "https://github.com/shym/ocaml-unikraft/issues"
-version: "0.17.0"
+version: "0.18.0"
 synopsis:
   "Virtual package to enable OCaml network stack in the Unikraft backends"
 authors: "Samuel Hym"
