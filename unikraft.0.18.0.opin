@@ -1,0 +1,28 @@
+opam-version: "2.0"
+name: "unikraft"
+version: "0.18.0"
+synopsis: "Unikraft sources"
+description: "Source package for Unikraft"
+maintainer: "samuel@tarides.com"
+authors: "Unikraft contributors"
+license: ["BSD-3-Clause" "MIT" "GPL-2.0"]
+homepage: "https://unikraft.org"
+bug-reports: "https://github.com/shym/ocaml-unikraft/issues"
+install: [
+  ["rm" "-rf" ".github" ".gitignore"]
+  ["cp" "-r" "." "%{lib}%/unikraft"]
+]
+dev-repo: "git+https://github.com/unikraft/unikraft.git"
+patches: [ "strong-main.patch" ]
+url {
+  src:
+    "https://github.com/unikraft/unikraft/archive/refs/tags/RELEASE-0.18.0.tar.gz"
+  checksum:
+    "sha256=680836d192e69167c3ce8c19892d5440c63885308aed0f40764d1ed42ed1f8e5"
+}
+extra-source "strong-main.patch" {
+  src:
+    "https://github.com/shym/unikraft/commit/06631bcc46cfe3e3f74824d8a7c36f1a97246889.patch"
+  checksum:
+    "sha256=0889759befcc6a0cd350ac49d6356133393de59188173bffb4f37ca4c7f007a3"
+}
