@@ -12,7 +12,7 @@ STDARCH := $(subst arm64,aarch64,$(OCUKARCH))
 # Unikraft external libraries (musl, lwip) to include
 OCUKEXTLIBS ?= musl lwip
 # Installation prefix for OCaml
-prefix ?= /usr/local
+prefix ?= $$PWD/_build
 
 EMPTY =
 SPACE = $(EMPTY) $(EMPTY)
@@ -270,11 +270,12 @@ ocaml:
 # We add $(BLDBIN) inconditionnally, even when using the installed toolchain: as
 # the $(BLDBIN) directory should not be built, it will just be ignored
 ocaml/Makefile.config: $(TOOLCHAIN) $(STDATOMIC_H) | ocaml
+	PREFIX="$(prefix)" ; \
 	cd ocaml && \
 	  PATH="$$PWD/../$(BLDBIN):$$PATH" \
 	  ./configure \
 		--target=$(STDARCH)-unikraft-ocaml \
-		--prefix=$(prefix)/lib/$(OCAMLPKG) \
+		--prefix="$$PREFIX/lib/$(OCAMLPKG)" \
 		--disable-shared \
 		--disable-ocamldoc \
 		--without-zstd
