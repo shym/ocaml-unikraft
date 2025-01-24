@@ -288,7 +288,7 @@ $(OCAMLBUILT): ocaml/Makefile.config | _build
 
 OCAMLFIND_CONF := _build/unikraft_$(OCUKARCH).conf
 $(OCAMLFIND_CONF): gen_ocamlfind_conf.sh $(OCAMLBUILT)
-	./gen_ocamlfind_conf.sh $(OCUKARCH) $(prefix) > $@
+	./gen_ocamlfind_conf.sh $(OCUKARCH) "$(prefix)" > $@
 
 .PHONY: compiler
 compiler: $(OCAMLBUILT) $(OCAMLFIND_CONF) _build/empty
@@ -298,7 +298,7 @@ compiler: $(OCAMLBUILT) $(OCAMLFIND_CONF) _build/empty
 ###################################################
 
 _build/unikraft.conf: | _build
-	./gen_ocamlfind_conf.sh default $(OCUKARCH) $(prefix) > $@
+	./gen_ocamlfind_conf.sh default $(OCUKARCH) "$(prefix)" > $@
 
 # INSTALL
 ###########
@@ -314,7 +314,7 @@ ocaml-unikraft-toolchain-$(OCUKARCH).install: gen_toolchain_install.sh \
 OCAML_DOT_INSTALL_CHUNKS := $(addprefix _build/ocaml.install, .lib .libexec)
 $(OCAML_DOT_INSTALL_CHUNKS) &: gen_ocaml_install.sh $(OCAMLBUILT)
 	MAKE="$(MAKE)" bash gen_ocaml_install.sh _build/ocaml.install ocaml \
-	    $(prefix)
+	    "$(prefix)"
 
 ocaml-unikraft-$(OCUKARCH).install: gen_dot_install.sh \
     $(OCAML_DOT_INSTALL_CHUNKS) $(OCAMLFIND_CONF) _build/empty
