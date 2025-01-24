@@ -281,9 +281,8 @@ ocaml/Makefile.config: $(TOOLCHAIN) $(STDATOMIC_H) | ocaml
 		--without-zstd
 
 $(OCAMLBUILT): ocaml/Makefile.config | _build
-	PATH="$$PWD/$(BLDBIN):$$PATH" $(MAKE) -C ocaml cross.opt
-	cd ocaml && ocamlrun tools/stripdebug ocamlc ocamlc.tmp
-	cd ocaml && ocamlrun tools/stripdebug ocamlopt ocamlopt.tmp
+	PATH="$$PWD/$(BLDBIN):$$PATH" \
+	  $(MAKE) -C ocaml crossopt OLDS="-o yacc/ocamlyacc -o lex/ocamllex"
 	touch $@
 
 OCAMLFIND_CONF := _build/unikraft_$(OCUKARCH).conf
