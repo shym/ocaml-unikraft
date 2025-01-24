@@ -13,7 +13,7 @@ install: [
   ["cp" "-r" "." "%{lib}%/unikraft"]
 ]
 dev-repo: "git+https://github.com/unikraft/unikraft.git"
-patches: [ "strong-main.patch" ]
+patches: [ "strong-main.patch" "ibm-vs-arm.patch" ]
 url {
   src:
     "https://github.com/unikraft/unikraft/archive/refs/tags/RELEASE-0.18.0.tar.gz"
@@ -25,4 +25,10 @@ extra-source "strong-main.patch" {
     "https://github.com/shym/unikraft/commit/06631bcc46cfe3e3f74824d8a7c36f1a97246889.patch"
   checksum:
     "sha256=0889759befcc6a0cd350ac49d6356133393de59188173bffb4f37ca4c7f007a3"
+}
+extra-source "ibm-vs-arm.patch" {
+  src:
+    "https://github.com/shym/unikraft/commit/d056838ca2af110839bdefdb094e0f37fa7b8af4.patch"
+  checksum:
+    "sha256=484043e9fd9afe09416155644a7d1d7cd92a5eff2563ce98c95db37cea00869e"
 }
