@@ -121,12 +121,9 @@ CONFIG_LIBUKRANDOM_LCPU=y
 #
 # Serial console
 #
-CONFIG_HAVE_IBMPC_NS16550=y
 # CONFIG_LIBNS16550 is not set
 CONFIG_LIBPL011=y
 CONFIG_LIBPL011_EARLY_CONSOLE=y
-CONFIG_HAVE_IBMPC_VGA=y
-# CONFIG_LIBVGACONS is not set
 # end of Serial console
 
 #
@@ -149,8 +146,6 @@ CONFIG_LIBVIRTIO_RING=y
 #
 # CONFIG_LIBXENEMGCONS is not set
 # end of Xen
-
-CONFIG_HAVE_IBMPC=y
 # end of Device Drivers
 
 #
