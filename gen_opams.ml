@@ -77,6 +77,18 @@ extra-source "lib-musl.tar.gz" {
   checksum:
     "sha256=b51afee0227c0c8c419dd001fb6b6f57b529e5cadcd437afdd05e2e8667a1e2e"
 }
+extra-source "patches/lib-musl/main-tsd.patch" {
+  src:
+    "https://github.com/shym/lib-musl/commit/c6fdfa79e23e6d52df2c2d28e4eb13e91b16ad4c.patch"
+  checksum:
+    "sha256=9b87cbf0743492e6949de61af6423b463031da8b14b799a775c34886cabffd28"
+}
+extra-source "patches/lib-musl/arm64.patch" {
+  src:
+    "https://github.com/shym/lib-musl/commit/ecae7ade7bcf7e0fb7e869225f6db1043d3653bf.patch"
+  checksum:
+    "sha256=d83043f534a8da4f0133f4fbde0d78bc3a5d996ca6f7fc91b42ccf2874515514"
+}
 extra-source "lwip-UNIKRAFT-2_1_x.zip" {
   src:
     "https://github.com/unikraft/fork-lwip/archive/refs/heads/UNIKRAFT-2_1_x.zip"
