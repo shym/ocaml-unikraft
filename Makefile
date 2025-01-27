@@ -99,6 +99,9 @@ $(BACKENDBUILT): $(CONFIG) | $(BEBLDLIBDIR)/Makefile $(LIB)/unikraft \
 _build/libs/%: lib-%.tar.gz
 	mkdir -p $@
 	$(UNTARSTRIP) -f $< -C $@
+	if test -d "patches/lib-$*" ; then \
+	  git apply --directory=$@ "patches/lib-$*"/*; \
+	fi
 
 $(MUSLARCHIVEPATH): $(MUSLARCHIVE)
 	mkdir -p $(dir $@)
