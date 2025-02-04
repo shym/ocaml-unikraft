@@ -2,11 +2,23 @@
 ; Copyright (c) 2024 Samuel Hym, Tarides <samuel@tarides.com>
 
 (executable
- (name main)
- (flags
-  :standard
-  (:include "flags"))
- (libraries unix)
+ (name generator)
+ (modules generator)
+ (libraries compiler-libs.common))
+
+(rule
+ (alias runtest)
+ (mode promote)
+ (action
+  (with-stdout-to
+   dune.inc
+   (run ./generator.exe dune.inc))))
+
+(include dune.inc)
+
+(library
+ (name unikraftstartup)
+ (modules)
  (foreign_stubs
   (language c)
   (flags
@@ -48,67 +60,4 @@
  (action
   (with-stdout-to
    qemu-call
-   (run ./gen_qemu_call.sh %{architecture}))))
-
-(rule
- (alias runtest)
- (enabled_if
-  (and
-   (= %{context_name} unikraft)
-   (= %{env:UNIKRAFTBACKEND=qemu} qemu)))
- (action
-  (with-accepted-exit-codes
-   (or
-    0
-    83
-    ; 83: Unikraft successful exit with ISA debug
-    )
-   (run
-    %{read-lines:qemu-call}
-    -nographic
-    -nodefaults
-    -serial
-    stdio
-    -netdev
-    user,id=n0,restrict=on
-    -device
-    virtio-net-pci,netdev=n0
-    -kernel
-    %{dep:main.exe}
-    -append
-    "netdev.ip=10.0.2.15/24 -- %{env:UNIKERNEL_CMDLINE=default}"))))
-
-(rule
- (alias runtest)
- (enabled_if
-  (and
-   (= %{context_name} unikraft)
-   (= %{env:UNIKRAFTBACKEND=qemu} fc)
-   %{bin-available:firecracker}))
- (deps
-  main.exe
-  (:config generated_vm_config.json))
- (action
-  (run firecracker --no-api --config-file %{config})))
-
-(rule
- (enabled_if
-  (and
-   (= %{context_name} unikraft)
-   (= %{env:UNIKERNEL_CMDLINE=default} default)))
- (action
-  (copy firecracker_vm_config.json generated_vm_config.json)))
-
-(rule
- (enabled_if
-  (and
-   (= %{context_name} unikraft)
-   (<> %{env:UNIKERNEL_CMDLINE=default} default)))
- (action
-  (with-stdout-to
-   generated_vm_config.json
-   (run
-    sed
-    -e
-    s/default/%{env:UNIKERNEL_CMDLINE=default}/
-    %{dep:firecracker_vm_config.json}))))
+   (run ./generator.exe qemu-call %{architecture}))))
