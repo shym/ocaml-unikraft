@@ -1,8 +1,13 @@
 #
 # Automatically generated file; DO NOT EDIT.
+# Unikraft/0.18.0 Configuration
 #
+CONFIG_UK_FULLVERSION="0.18.0"
 CONFIG_UK_CODENAME="Helene"
 CONFIG_UK_ARCH="arm64"
+CONFIG_HOST_ARCH="x86_64"
+CONFIG_UK_BASE="/home/hym/.opam/stable/lib/unikraft"
+CONFIG_UK_APP="/home/hym/w/unikraft/ocaml-unikraft/dummykernel"
 CONFIG_UK_DEFNAME="dummykernel"
 
 #
@@ -11,9 +16,9 @@ CONFIG_UK_DEFNAME="dummykernel"
 # CONFIG_ARCH_X86_64 is not set
 CONFIG_ARCH_ARM_64=y
 # CONFIG_ARCH_ARM_32 is not set
-CONFIG_MCPU_ARM64_NONE=y
+# CONFIG_MCPU_ARM64_NONE is not set
 # CONFIG_MCPU_ARM64_NATIVE is not set
-# CONFIG_MCPU_ARM64_GENERIC is not set
+CONFIG_MCPU_ARM64_GENERIC=y
 # CONFIG_MCPU_ARM64_CORTEX_A34 is not set
 # CONFIG_MCPU_ARM64_CORTEX_A35 is not set
 # CONFIG_MCPU_ARM64_CORTEX_A53 is not set
@@ -37,16 +42,6 @@ CONFIG_MCPU_ARM64_NONE=y
 # CONFIG_MCPU_ARM64_NEOVERSE_N1 is not set
 # CONFIG_MCPU_ARM64_NEOVERSE_N2 is not set
 # CONFIG_MCPU_ARM64_NEOVERSE_V1 is not set
-
-#
-# Armv8-A Extensions
-#
-# CONFIG_ARM64_FEAT_PAUTH is not set
-# CONFIG_ARM64_FEAT_BTI is not set
-# CONFIG_ARM64_FEAT_MTE is not set
-# end of Armv8-A Extensions
-
-CONFIG_HAVE_ARM64_FEAT_RNG=y
 CONFIG_ARM64_ERRATUM_858921=y
 CONFIG_ARM64_ERRATUM_835769=y
 CONFIG_ARM64_ERRATUM_843419=y
@@ -115,7 +110,7 @@ CONFIG_LIBUKINTCTLR_GICV2=y
 #
 # Random Number Generator
 #
-CONFIG_LIBUKRANDOM_LCPU=y
+# CONFIG_LIBUKRANDOM_LCPU is not set
 # end of Random Number Generator
 
 #
