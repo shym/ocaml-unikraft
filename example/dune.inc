@@ -41,7 +41,7 @@
  (enabled_if
   (and
    (= %{context_name} unikraft)
-   (= %{env:UNIKRAFTBACKEND=qemu} fc)
+   (= %{env:UNIKRAFTBACKEND=qemu} firecracker)
    %{bin-available:firecracker}))
  (deps
   hello.exe
@@ -92,7 +92,7 @@
  (enabled_if
   (and
    (= %{context_name} unikraft)
-   (= %{env:UNIKRAFTBACKEND=qemu} fc)
+   (= %{env:UNIKRAFTBACKEND=qemu} firecracker)
    %{bin-available:firecracker}))
  (deps
   sleeper.exe
@@ -145,7 +145,7 @@
  (enabled_if
   (and
    (= %{context_name} unikraft)
-   (= %{env:UNIKRAFTBACKEND=qemu} fc)
+   (= %{env:UNIKRAFTBACKEND=qemu} firecracker)
    %{bin-available:firecracker}))
  (deps
   args.exe

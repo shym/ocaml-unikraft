@@ -68,7 +68,7 @@ let print_dune_one_test test extralibs extraargs =
  (enabled_if
   (and
    (= %%{context_name} unikraft)
-   (= %%{env:UNIKRAFTBACKEND=qemu} fc)
+   (= %%{env:UNIKRAFTBACKEND=qemu} firecracker)
    %%{bin-available:firecracker}))
  (deps
   %s.exe
