@@ -35,10 +35,10 @@ jobs:
           opam install                         \
             ocaml-unikraft-x86_64              \
             ocaml-unikraft-backend-qemu-x86_64 \
-            ocaml-unikraft-backend-fc-x86_64   \
+            ocaml-unikraft-backend-firecracker-x86_64   \
             ocaml-unikraft-arm64               \
             ocaml-unikraft-backend-qemu-arm64  \
-            ocaml-unikraft-backend-fc-arm64
+            ocaml-unikraft-backend-firecracker-arm64
       - name: Show configuration
         run: |
           opam exec -- ocamlc -config
@@ -50,7 +50,7 @@ jobs:
             ocaml-unikraft                \
             ocaml-unikraft-default-arm64  \
             ocaml-unikraft-backend-qemu   \
-            ocaml-unikraft-backend-fc
+            ocaml-unikraft-backend-firecracker
       - name: Show toolchain configuration
         run: |
           opam exec -- ocamlfind -toolchain unikraft ocamlc -config
