@@ -11,7 +11,7 @@ description:
 authors: "Samuel Hym"
 license: "MIT"
 depends: [
-  "ocaml-unikraft-backend-qemu-arm64" | "ocaml-unikraft-backend-fc-arm64"
+  "ocaml-unikraft-backend-qemu-arm64" | "ocaml-unikraft-backend-firecracker-arm64"
 ]
 build: [
   [

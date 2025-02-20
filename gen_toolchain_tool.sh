@@ -25,7 +25,7 @@ gen_cc() {
   DEFAULT_UNIKRAFT_BACKEND="$(extract_backend \
     "$SHAREDIR"/ocaml-unikraft-backend-*-"$ARCH")"
   case "$DEFAULT_UNIKRAFT_BACKEND" in
-    qemu|fc|xen)
+    qemu|firecracker|xen)
       ;;
     *)
       DEFAULT_UNIKRAFT_BACKEND=nobackendfound

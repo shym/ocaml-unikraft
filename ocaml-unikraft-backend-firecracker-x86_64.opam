@@ -1,10 +1,10 @@
 opam-version: "2.0"
-name: "ocaml-unikraft-backend-fc-arm64"
+name: "ocaml-unikraft-backend-firecracker-x86_64"
 maintainer: "samuel@tarides.com"
 homepage: "https://github.com/shym/ocaml-unikraft/"
 bug-reports: "https://github.com/shym/ocaml-unikraft/issues"
 version: "0.18.0"
-synopsis: "FireCracker/arm64 Unikraft backend for OCaml"
+synopsis: "FireCracker/x86_64 Unikraft backend for OCaml"
 authors: ["Samuel Hym" "Unikraft contributors"]
 license: ["MIT" "BSD-3-Clause" "GPL-2.0-only"]
 depends: [
@@ -20,8 +20,8 @@ build: [
     make
     "-j%{jobs}%"
     "UNIKRAFT=%{lib}%/unikraft"
-    "OCUKPLAT=fc"
-    "OCUKARCH=arm64"
+    "OCUKPLAT=firecracker"
+    "OCUKARCH=x86_64"
     "OCUKEXTLIBS=musl"
     "OCUKEXTLIBS+=lwip" {ocaml-unikraft-option-lwip:installed}
     "OCUKCONFIGOPTS+=debug" {ocaml-unikraft-option-debug:installed}

@@ -1,5 +1,5 @@
 opam-version: "2.0"
-name: "ocaml-unikraft-backend-fc"
+name: "ocaml-unikraft-backend-firecracker"
 maintainer: "samuel@tarides.com"
 homepage: "https://github.com/shym/ocaml-unikraft/"
 bug-reports: "https://github.com/shym/ocaml-unikraft/issues"
@@ -12,6 +12,6 @@ authors: "Samuel Hym"
 license: "MIT"
 depends: [
   "ocaml-unikraft"
-  ("ocaml-unikraft-default-x86_64" & "ocaml-unikraft-backend-fc-x86_64") |
-  ("ocaml-unikraft-default-arm64" & "ocaml-unikraft-backend-fc-arm64")
+  ("ocaml-unikraft-default-x86_64" & "ocaml-unikraft-backend-firecracker-x86_64") |
+  ("ocaml-unikraft-default-arm64" & "ocaml-unikraft-backend-firecracker-arm64")
 ]

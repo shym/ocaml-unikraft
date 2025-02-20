@@ -4,7 +4,7 @@
 # CONFIGURATION
 #################
 
-# Target platform: qemu, fc or xen
+# Target platform: qemu, firecracker or xen
 OCUKPLAT ?= qemu
 # Target architecture: x86_64 or arm64
 OCUKARCH ?= x86_64
@@ -145,7 +145,7 @@ fullconfig: $(CONFIG)
 # Rebuild all the full configurations
 .PHONY: fullconfigs
 fullconfigs:
-	+for p in qemu fc xen; do \
+	+for p in qemu firecracker xen; do \
 	  for a in x86_64 arm64; do \
 	    for l in musl "musl lwip"; do \
 	      for o in "" debug; do \

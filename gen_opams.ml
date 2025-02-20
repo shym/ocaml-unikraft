@@ -7,7 +7,7 @@
 let version_ocaml_unikraft = "0.0.1"
 let version_unikraft = "0.18.0"
 let archs = [ "arm64"; "x86_64" ]
-let backends = [ ("fc", "FireCracker"); ("qemu", "QEMU") ]
+let backends = [ ("firecracker", "FireCracker"); ("qemu", "QEMU") ]
 
 let options =
   [
@@ -138,7 +138,7 @@ description:
 authors: "Samuel Hym"
 license: "MIT"
 depends: [
-  "ocaml-unikraft-backend-qemu-%s" | "ocaml-unikraft-backend-fc-%s"
+  "ocaml-unikraft-backend-qemu-%s" | "ocaml-unikraft-backend-firecracker-%s"
 ]
 build: [
   [
