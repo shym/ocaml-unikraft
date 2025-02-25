@@ -7,6 +7,7 @@ on: [push, pull_request]
 
 jobs:
   test:
+    name: Run examples on both architectures
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
@@ -89,3 +90,88 @@ jobs:
           cd example
           opam exec -- dune runtest
         continue-on-error: true
+
+  mirage:
+    name: Build and test a MirageOS network unikernel
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Checkout skeleton code
+        uses: actions/checkout@v4
+        with:
+          repository: mirage/mirage-skeleton
+          path: skeleton
+      - name: Compute dummy PATH
+        run: |
+          echo "DUMMYPATH=$PWD/.github/bin/:$PATH" >> "$GITHUB_ENV"
+      - name: Install OCaml compiler
+        uses: ocaml/setup-ocaml@v3
+        env:
+          PATH: ${{ env.DUMMYPATH }}
+          OVERRIDE_APT_INSTALL: bubblewrap qemu-system-x86
+        with:
+          ocaml-compiler: 5.3.0
+          # We need to pin our packages with their real version numbers, to
+          # satisfy the dependency bounds of the other packages
+          opam-pin: false
+      - name: Pin necessary packages
+        run: |
+          opam pin add -yn ocaml-unikraft-backend-qemu-x86_64.0.18.0 .
+          opam pin add -yn ocaml-unikraft-backend-qemu.0.0.1 .
+          opam pin add -yn ocaml-unikraft-default-x86_64.0.0.1 .
+          opam pin add -yn ocaml-unikraft-option-debug.0.18.0 .
+          opam pin add -yn ocaml-unikraft-option-lwip.0.18.0 .
+          opam pin add -yn ocaml-unikraft-option-ocaml-net-stack.0.18.0 .
+          opam pin add -yn ocaml-unikraft-toolchain-x86_64.0.0.1 .
+          opam pin add -yn ocaml-unikraft-x86_64.0.0.1 .
+          opam pin add -yn ocaml-unikraft.0.0.1 .
+          OPAMEDITOR="cp unikraft.0.18.0.opin" opam pin add -ey unikraft.0.18.0 - < /dev/null
+          #
+          opam pin add -ny --with-version=0.4.0 'https://github.com/hannesm/opam-monorepo.git#53'
+          opam pin add -ny --with-version=4.8.3 'https://github.com/fabbing/mirage.git#unikraft_target'
+          opam pin add -ny --with-version=1.0.0 'https://github.com/fabbing/mirage-unikraft_.git'
+          opam pin add -ny --with-version=1.0.0 'https://github.com/fabbing/mirage-net-unikraft.git'
+          opam pin add -ny --with-version=4.2.0 'https://github.com/fabbing/mirage-clock.git#unikraft'
+          opam pin add -ny --with-version=1.0.0 'https://github.com/fabbing/mirage-block-unikraft.git#duniverse'
+      - name: Install packages
+        run: |
+          opam install                    \
+            ocaml-unikraft-default-x86_64 \
+            ocaml-unikraft-backend-qemu   \
+            ocaml-unikraft                \
+            mirage
+      - name: Show configuration
+        run: |
+          opam exec -- ocamlc -config
+          opam config list
+          opam list
+      - name: Show toolchain configuration
+        run: |
+          opam exec -- ocamlfind -toolchain unikraft ocamlc -config
+      - name: Build skeleton
+        run: |
+          set -x
+          cd skeleton/device-usage/network/
+          opam exec -- mirage configure -t qemu
+          opam exec -- make
+      - name: Test skeleton
+        run: |
+          set -x
+          sudo ip link add br0 type bridge
+          sudo ip tuntap add dev tap0 mode tap
+          sudo ip link set dev tap0 master br0
+          sudo ip addr add 10.0.0.1/24 dev br0
+          sudo ip link set dev br0 up
+          sudo ip link set dev tap0 up
+          cd skeleton/device-usage/network/
+          (sleep 20s; pkill 'qemu-system.*') &
+          (sleep 8s;            \
+            curl 10.0.0.2:8080; \
+            sleep 1s;           \
+            curl 10.0.0.2:8080; ) &
+          qemu-system-x86_64 -nographic -nodefaults -serial stdio -machine q35 \
+            -cpu "qemu64,-vmx,-svm,+x2apic,+pdpe1gb,+rdrand,+rdseed" -m 1G     \
+            -netdev tap,id=hnet0,ifname=tap0,vhost=off,script=no,downscript=no \
+            -device virtio-net-pci,netdev=hnet0,id=net0                        \
+            -kernel dist/network.qemu -append "-l debug --ipv4-only=true"
