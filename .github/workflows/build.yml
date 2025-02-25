@@ -79,12 +79,11 @@ jobs:
           sudo ip link set dev br0 up
           sudo ip link set dev tap0 up
           cd skeleton/device-usage/network/
-          (sleep 10s;           \
-            curl 10.0.0.1:8080; \
-            sleep 2s;           \
-            curl 10.0.0.1:8080; \
-            sleep 5s;           \
-            pkill 'qemu-system.*') &
+          (sleep 20s; pkill 'qemu-system.*') &
+          (sleep 8s;            \
+            curl 10.0.0.2:8080; \
+            sleep 1s;           \
+            curl 10.0.0.2:8080; ) &
           qemu-system-x86_64 -nographic -nodefaults -serial stdio -machine q35 \
             -cpu "qemu64,-vmx,-svm,+x2apic,+pdpe1gb,+rdrand,+rdseed" -m 1G     \
             -netdev tap,id=hnet0,ifname=tap0,vhost=off,script=no,downscript=no \
