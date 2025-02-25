@@ -26,7 +26,8 @@ jobs:
           OVERRIDE_APT_INSTALL: bubblewrap qemu-system-x86
         with:
           ocaml-compiler: 5.3.0
-          # We want real version numbers!
+          # We need to pin our packages with their real version numbers, to
+          # satisfy the dependency bounds of the other packages
           opam-pin: false
       - name: Pin necessary packages
         run: |
@@ -78,5 +79,14 @@ jobs:
           sudo ip link set dev br0 up
           sudo ip link set dev tap0 up
           cd skeleton/device-usage/network/
-          (sleep 20s; pkill 'qemu-system.*') &
-          qemu-system-x86_64 -machine q35 -cpu "qemu64,-vmx,-svm,+x2apic,+pdpe1gb,+rdrand,+rdseed" -m 1G -nographic -nodefaults -serial stdio -netdev tap,id=hnet0,ifname=tap0,vhost=off,script=no,downscript=no -device virtio-net-pci,netdev=hnet0,id=net0 -kernel dist/network.qemu -append "-l debug --ipv4-only=true"
+          (sleep 10s;           \
+            curl 10.0.0.1:8080; \
+            sleep 2s;           \
+            curl 10.0.0.1:8080; \
+            sleep 5s;           \
+            pkill 'qemu-system.*') &
+          qemu-system-x86_64 -nographic -nodefaults -serial stdio -machine q35 \
+            -cpu "qemu64,-vmx,-svm,+x2apic,+pdpe1gb,+rdrand,+rdseed" -m 1G     \
+            -netdev tap,id=hnet0,ifname=tap0,vhost=off,script=no,downscript=no \
+            -device virtio-net-pci,netdev=hnet0,id=net0                        \
+            -kernel dist/network.qemu -append "-l debug --ipv4-only=true"
