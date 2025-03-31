@@ -28,3 +28,6 @@ build: [
     "%{name}%.install"
   ]
 ]
+install: [
+  [make "install-ocaml"]
+]

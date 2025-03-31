@@ -313,18 +313,19 @@ ocaml-unikraft-toolchain-$(OCUKARCH).install: gen_toolchain_install.sh \
     $(BLDTOOLCHAIN) $(BLDSTDATOMIC_H)
 	./gen_toolchain_install.sh $(OCUKARCH) $(BLDTOOLCHAIN) > $@
 
-OCAML_DOT_INSTALL_CHUNKS := $(addprefix _build/ocaml.install, .lib .libexec)
-$(OCAML_DOT_INSTALL_CHUNKS) &: gen_ocaml_install.sh $(OCAMLBUILT)
-	MAKE="$(MAKE)" bash gen_ocaml_install.sh _build/ocaml.install ocaml \
-	    "$(prefix)"
-
 ocaml-unikraft-$(OCUKARCH).install: gen_dot_install.sh \
-    $(OCAML_DOT_INSTALL_CHUNKS) $(OCAMLFIND_CONF) _build/empty
-	./gen_dot_install.sh _build/ocaml.install $(OCUKARCH) > $@
+    $(OCAMLFIND_CONF) _build/empty
+	./gen_dot_install.sh $(OCUKARCH) > $@
 
 ocaml-unikraft-default-$(OCUKARCH).install: _build/unikraft.conf
 	printf 'lib_root: [\n  "%s" { "%s" }\n]\n' $< \
 	  findlib.conf.d/unikraft.conf > $@
+
+.PHONY: install-ocaml
+install-ocaml: $(OCAMLBUILT)
+	ln -sf "$$(command -v ocamllex)" ocaml/lex/ocamllex
+	ln -sf "$$(command -v ocamlyacc)" ocaml/yacc/ocamlyacc
+	$(MAKE) -C ocaml installcross
 
 
 # MISC

@@ -183,6 +183,9 @@ build: [
     "%%{name}%%.install"
   ]
 ]
+install: [
+  [make "install-ocaml"]
+]
 |}
         version_ocaml_unikraft arch arch arch arch)
 
