@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # SPDX-License-Identifier: MIT
-# Copyright (c) 2024 Samuel Hym, Tarides <samuel@tarides.com>
+# Copyright (c) 2025 Samuel Hym, Tarides <samuel@tarides.com>
 
 case "$1" in
   default)

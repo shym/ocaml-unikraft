@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # SPDX-License-Identifier: MIT
-# Copyright (c) 2024 Samuel Hym, Tarides <samuel@tarides.com>
+# Copyright (c) 2025 Samuel Hym, Tarides <samuel@tarides.com>
 
 # Generate a wrapper for the C compiler, the linker and other binutils
 # Usage: $0 <ARCH> <SHAREDIR> <TOOL>

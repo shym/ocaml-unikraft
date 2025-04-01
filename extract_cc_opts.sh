@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # SPDX-License-Identifier: MIT
-# Copyright (c) 2024 Samuel Hym, Tarides <samuel@tarides.com>
+# Copyright (c) 2025 Samuel Hym, Tarides <samuel@tarides.com>
 
 # Unikraft says in various places it requires bash, so we can follow suit, to
 # use its powerful ${v//"$var"/...} substitution
