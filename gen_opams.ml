@@ -12,8 +12,9 @@ let backends = [ ("firecracker", "FireCracker"); ("qemu", "QEMU") ]
 let options =
   [
     ("debug", "debugging", []);
-    ("lwip", "the lwIP library", [ "network-stack" ]);
-    ("ocaml-net-stack", "OCaml network stack", [ "network-stack" ]);
+    (* The other options are not ready for prime time *)
+    (* ("lwip", "the lwIP library", [ "network-stack" ]); *)
+    (* ("ocaml-net-stack", "OCaml network stack", [ "network-stack" ]); *)
   ]
 
 let with_package package_name gen =
@@ -60,7 +61,7 @@ build: [
     "OCUKPLAT=%s"
     "OCUKARCH=%s"
     "OCUKEXTLIBS=musl"
-    "OCUKEXTLIBS+=lwip" {ocaml-unikraft-option-lwip:installed}
+    # "OCUKEXTLIBS+=lwip" {ocaml-unikraft-option-lwip:installed}
     "OCUKCONFIGOPTS+=debug" {ocaml-unikraft-option-debug:installed}
     "%%{name}%%.install"
   ]

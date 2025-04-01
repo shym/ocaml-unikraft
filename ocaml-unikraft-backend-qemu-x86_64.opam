@@ -12,8 +12,6 @@ depends: [
 ]
 depopts: [
   "ocaml-unikraft-option-debug"
-  "ocaml-unikraft-option-lwip"
-  "ocaml-unikraft-option-ocaml-net-stack"
 ]
 build: [
   [
@@ -23,7 +21,7 @@ build: [
     "OCUKPLAT=qemu"
     "OCUKARCH=x86_64"
     "OCUKEXTLIBS=musl"
-    "OCUKEXTLIBS+=lwip" {ocaml-unikraft-option-lwip:installed}
+    # "OCUKEXTLIBS+=lwip" {ocaml-unikraft-option-lwip:installed}
     "OCUKCONFIGOPTS+=debug" {ocaml-unikraft-option-debug:installed}
     "%{name}%.install"
   ]
