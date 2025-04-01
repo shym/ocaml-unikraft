@@ -10,7 +10,9 @@ OCUKPLAT ?= qemu
 OCUKARCH ?= x86_64
 STDARCH := $(subst arm64,aarch64,$(OCUKARCH))
 # Unikraft external libraries (musl, lwip) to include
-OCUKEXTLIBS ?= musl lwip
+OCUKEXTLIBS ?= musl
+# Options for the configuration (only available option at the moment: debug)
+OCUKCONFIGOPTS ?=
 # Installation prefix for OCaml
 prefix ?= $$PWD/_build
 
