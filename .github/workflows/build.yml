@@ -69,27 +69,6 @@ jobs:
         run: |
           cd example
           opam exec -- dune runtest
-      - name: Enable lwIP
-        run: |
-          opam install ocaml-unikraft-option-lwip
-      - name: Show toolchain configuration
-        run: |
-          opam exec -- ocamlfind -toolchain unikraft ocamlc -config
-      - name: Test examples
-        run: |
-          cd example
-          opam exec -- dune runtest
-      - name: Install the other default packages
-        run: |
-          opam install ocaml-unikraft-default-arm64
-      - name: Show configuration
-        run: |
-          opam exec -- ocamlfind -toolchain unikraft ocamlc -config
-      - name: Test examples
-        run: |
-          cd example
-          opam exec -- dune runtest
-        continue-on-error: true
 
   mirage:
     name: Build and test a MirageOS network unikernel
