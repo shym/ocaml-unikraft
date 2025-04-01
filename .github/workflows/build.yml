@@ -166,7 +166,8 @@ jobs:
           sudo ip link set dev tap0 up
           cd skeleton/device-usage/network/
           (sleep 20s; pkill 'qemu-system.*') &
-          (sleep 8s;            \
+          (set +e;              \
+            sleep 8s;           \
             curl 10.0.0.2:8080; \
             sleep 1s;           \
             curl 10.0.0.2:8080; ) &
