@@ -322,7 +322,7 @@ ocaml-unikraft-default-$(OCUKARCH).install: _build/unikraft.conf
 	  findlib.conf.d/unikraft.conf > $@
 
 .PHONY: install-ocaml
-install-ocaml: $(OCAMLBUILT)
+install-ocaml:
 	ln -sf "$$(command -v ocamllex)" ocaml/lex/ocamllex
 	ln -sf "$$(command -v ocamlyacc)" ocaml/yacc/ocamlyacc
 	$(MAKE) -C ocaml installcross
