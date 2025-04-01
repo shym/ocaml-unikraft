@@ -145,7 +145,7 @@ fullconfig: $(CONFIG)
 # Rebuild all the full configurations
 .PHONY: fullconfigs
 fullconfigs:
-	+for p in qemu firecracker xen; do \
+	+for p in qemu firecracker; do \
 	  for a in x86_64 arm64; do \
 	    for l in musl "musl lwip"; do \
 	      for o in "" debug; do \
