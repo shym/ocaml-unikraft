@@ -114,7 +114,7 @@ jobs:
             ocaml-unikraft-default-x86_64 \
             ocaml-unikraft-backend-qemu   \
             ocaml-unikraft                \
-            mirage.4.8.3
+            mirage
       - name: Show configuration
         run: |
           opam exec -- ocamlc -config
