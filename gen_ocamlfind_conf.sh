@@ -27,7 +27,7 @@ checkopt() {
 }
 
 cat << EOF
-path(unikraft$ARCH) = "$PREFIX/lib"
+path(unikraft$ARCH) = "$PREFIX/lib/ocaml:$PREFIX/lib"
 destdir(unikraft$ARCH) = "$PREFIX/lib"
 stdlib(unikraft$ARCH) = "$PREFIX/lib/ocaml"
 ocamlopt(unikraft$ARCH) = "$PREFIX/bin/ocamlopt$(checkopt ocamlopt)"

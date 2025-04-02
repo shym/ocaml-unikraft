@@ -10,7 +10,6 @@ main() {
   "_build/unikraft_%s.conf" { "findlib.conf.d/unikraft_%s.conf" }
 ]
 lib: [
-  "_build/empty" { "lib/threads/META" }
   "_build/empty" { "lib/is_unikraft/META" }
 ]
 ' "$ARCH" "$ARCH"
