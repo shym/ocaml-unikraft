@@ -17,14 +17,14 @@ case "$1" in
     PREFIX="$3/lib/ocaml-unikraft-$2"
     OCAMLDIR="$PREFIX/bin"
     BYTE=".byte"
-    OCAMLDEPSUBDIR=""
+    OCAMLDEP=ocamldep
     ;;
   *)
     ARCH="_$1"
     PREFIX="$2/lib/ocaml-unikraft-$1"
     OCAMLDIR="ocaml"
     BYTE=""
-    OCAMLDEPSUBDIR="tools/"
+    OCAMLDEP=tools/ocamldep
     ;;
 esac
 
@@ -39,7 +39,7 @@ checkopt() {
 # Check that the compiler is installed in $PREFIX, so that it makes sense to
 # detect whether the .opt versions are available
 
-for cmd in ocamlc ocamlopt "$OCAMLDEPSUBDIR"ocamldep; do
+for cmd in ocamlc ocamlopt "$OCAMLDEP"; do
   if ! test -x "$OCAMLDIR/$cmd.opt$EXE" \
     && ! test -x "$OCAMLDIR/$cmd$BYTE$EXE"; then
     printf 'Fatal error: cannot find %s!\nLooked in: "%s"\n' \
@@ -55,6 +55,6 @@ stdlib(unikraft$ARCH) = "$PREFIX/lib/ocaml"
 ocamlopt(unikraft$ARCH) = "$PREFIX/bin/ocamlopt$(checkopt ocamlopt)"
 ocamlc(unikraft$ARCH) = "$PREFIX/bin/ocamlc$(checkopt ocamlc)"
 ocamlmklib(unikraft$ARCH) = "$PREFIX/bin/ocamlmklib$EXE"
-ocamldep(unikraft$ARCH) = "$PREFIX/bin/ocamldep$(checkopt ocamldep)"
+ocamldep(unikraft$ARCH) = "$PREFIX/bin/ocamldep$(checkopt "$OCAMLDEP")"
 ocamlcp(unikraft$ARCH) = "$PREFIX/bin/ocamlcp$EXE"
 EOF
