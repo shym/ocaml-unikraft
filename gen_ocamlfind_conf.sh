@@ -16,11 +16,15 @@ case "$1" in
     ARCH=""
     PREFIX="$3/lib/ocaml-unikraft-$2"
     OCAMLDIR="$PREFIX/bin"
+    BYTE=".byte"
+    OCAMLDEPSUBDIR=""
     ;;
   *)
     ARCH="_$1"
     PREFIX="$2/lib/ocaml-unikraft-$1"
     OCAMLDIR="ocaml"
+    BYTE=""
+    OCAMLDEPSUBDIR="tools/"
     ;;
 esac
 
@@ -35,9 +39,9 @@ checkopt() {
 # Check that the compiler is installed in $PREFIX, so that it makes sense to
 # detect whether the .opt versions are available
 
-for cmd in ocamlc ocamlopt ocamldep; do
+for cmd in ocamlc ocamlopt "$OCAMLDEPSUBDIR"ocamldep; do
   if ! test -x "$OCAMLDIR/$cmd.opt$EXE" \
-    && ! test -x "$OCAMLDIR/$cmd.byte$EXE"; then
+    && ! test -x "$OCAMLDIR/$cmd$BYTE$EXE"; then
     printf 'Fatal error: cannot find %s!\nLooked in: "%s"\n' \
       "$cmd" "$OCAMLDIR" >&2
     exit 2
