@@ -301,6 +301,8 @@ compiler: $(OCAMLBUILT) $(OCAMLFIND_CONF) _build/empty
 # OCAMLFIND TOOLCHAIN WITH A DEFAULT ARCHITECTURE
 ###################################################
 
+# This assumes that the OCaml compiler has been installed, as it will ensure it
+# can find the compiler where it is expected within $(prefix)
 _build/unikraft.conf: | _build
 	./gen_ocamlfind_conf.sh default $(OCUKARCH) "$(prefix)" > $@
 
@@ -356,6 +358,18 @@ _build/lib/unikraft: | _build/lib
 	    echo $(SYMLINK) "$(UNIKRAFT)" $@ ; \
 	    $(SYMLINK) "$(UNIKRAFT)" $@ ; \
 	fi
+
+# Run the examples with a local build, namely a cross compiler that's installed
+# in _build, so:
+# make -j compiler && make install-ocaml && make _build/unikraft.conf
+# and then make locatests
+.PHONY: localtests
+localtests:
+	pwd="$$PWD" ; \
+	  cd example/ && \
+	  PATH="$$pwd/$(BLDBIN):$$PATH" \
+	  OCAMLFIND_CONF="$$pwd/_build/unikraft.conf" \
+	  dune runtest
 
 .PHONY: opams
 opams:
