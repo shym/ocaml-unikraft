@@ -243,19 +243,8 @@ $(BLDBIN)/$(STDARCH)-unikraft-ocaml-%: gen_toolchain_tool.sh $(CONFIGFILES) \
 	./gen_toolchain_tool.sh $(OCUKARCH) $(SHARE) $* > $@
 	chmod +x $@
 
-# Fetch the stdatomic.h header and its freestanding dependencies from the
-# compiler
-STDATOMIC_H := $(TOOLCHAINPKG)/include/stdatomic.h
-BLDSTDATOMIC_H := $(BLDLIB)/$(STDATOMIC_H)
-STDATOMIC_H := $(LIB)/$(STDATOMIC_H)
-$(BLDSTDATOMIC_H): $(SHAREDIR)/cc | $(dir $(BLDSTDATOMIC_H))
-	echo '#include <stdatomic.h>' \
-	| $(file < $<) -ffreestanding -H -x c -E -o /dev/null - 2>&1 \
-	| sed 's/^[^ ]* //' \
-	| while read header; do cp "$$header" $(dir $@); done
-
 .PHONY: toolchain
-toolchain: $(BLDTOOLCHAIN) $(BLDSTDATOMIC_H)
+toolchain: $(BLDTOOLCHAIN)
 
 
 # OCAML COMPILER
@@ -275,7 +264,7 @@ ocaml:
 
 # We add $(BLDBIN) inconditionnally, even when using the installed toolchain: as
 # the $(BLDBIN) directory should not be built, it will just be ignored
-ocaml/Makefile.config: $(TOOLCHAIN) $(STDATOMIC_H) | ocaml
+ocaml/Makefile.config: $(TOOLCHAIN) | ocaml
 	PREFIX="$(prefix)" ; \
 	cd ocaml && \
 	  PATH="$$PWD/../$(BLDBIN):$$PATH" \
