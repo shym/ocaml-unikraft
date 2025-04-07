@@ -5,9 +5,9 @@ homepage: "https://github.com/shym/ocaml-unikraft/"
 bug-reports: "https://github.com/shym/ocaml-unikraft/issues"
 version: "0.0.1"
 synopsis:
-  "Virtual package to ensure the FireCracker Unikraft backend is installed for the default cross-compiler"
+  "Virtual package to ensure the Firecracker Unikraft backend is installed for the default cross-compiler"
 description:
-  "This virtual package ensures that the FireCracker backend is installed for the default `unikraft` ocamlfind cross toolchain."
+  "This virtual package ensures that the Firecracker backend is installed for the default `unikraft` ocamlfind cross toolchain."
 authors: "Samuel Hym"
 license: "MIT"
 depends: [

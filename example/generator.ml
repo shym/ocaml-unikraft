@@ -4,7 +4,7 @@
 
 (* A small generator for:
    - dune.inc
-   - FireCracker configurations
+   - Firecracker configurations
    - how to call QEMU *)
 
 let pr fmt out entries = List.iter (Printf.fprintf out fmt) entries
