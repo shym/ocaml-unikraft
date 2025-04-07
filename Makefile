@@ -214,7 +214,8 @@ $(BLDSHAREDIR)/poststeps: $(BLDSHAREDIR)/.poststeps.log $(BLDSHAREDIR)/.suffix
 	    -e '/sh provided_syscalls.in/d' \
 	    -e '/sh libraries.in/d' $(BLDSHAREDIR)/.poststeps.log \
 	| bash extract_postprocessing.sh "$(UNIKRAFT)" \
-	    "$$PWD/$(BEBLDLIBDIR)" dummykernel_$(OCUKPLAT)-$(OCUKARCH) \
+	    "$$PWD/$(BEBLDLIBDIR)" \
+	    dummykernel_$(subst firecracker,fc,$(OCUKPLAT))-$(OCUKARCH) \
 	    $(BLDSHAREDIR)/.suffix > $@
 
 .PHONY: backend
