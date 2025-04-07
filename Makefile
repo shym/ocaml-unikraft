@@ -304,7 +304,7 @@ $(BACKENDPKG).install: gen_backend_install.sh $(BACKENDBUILT) \
 	./gen_backend_install.sh $(OCUKPLAT)-$(OCUKARCH) > $@
 
 ocaml-unikraft-toolchain-$(OCUKARCH).install: gen_toolchain_install.sh \
-    $(BLDTOOLCHAIN) $(BLDSTDATOMIC_H)
+    $(BLDTOOLCHAIN)
 	./gen_toolchain_install.sh $(OCUKARCH) $(BLDTOOLCHAIN) > $@
 
 ocaml-unikraft-$(OCUKARCH).install: gen_dot_install.sh \

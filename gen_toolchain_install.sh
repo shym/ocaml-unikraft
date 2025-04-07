@@ -38,10 +38,6 @@ main() {
     install_file "$f"
   done
   printf ']\n'
-
-  printf '%s: [\n' lib
-  walk_tree _build/lib/ocaml-unikraft-toolchain-"$ARCH"
-  printf ']\n'
 }
 
 main "$@"
