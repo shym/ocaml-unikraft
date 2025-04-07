@@ -98,7 +98,6 @@ EOF
       printf ')\n    LIBDIR="$basedir/lib/%s"\n' "${b##*/}"
       printf '    set -- \\\n      -D __Unikraft__ \\\n'
       cat "$b"/cflags
-      printf '      -I"$basedir/lib/ocaml-unikraft-toolchain-%s/include" \\\n' "$ARCH"
       # Access the compiler base headers, such as x86intrin.h, if needed
       printf '      -isystem %s \\\n' "${includedir@Q}"
       printf '      -static \\\n'
