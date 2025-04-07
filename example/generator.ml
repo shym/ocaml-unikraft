@@ -83,6 +83,7 @@ let print_dune_one_test test extralibs extraargs =
 let gen_dune () =
   print_dune_one_test "hello" [] [];
   print_dune_one_test "sleeper" [ "unix" ] [];
+  print_dune_one_test "threader" [ "unix"; "threads" ] [];
   print_dune_one_test "args" [] [ "arg1"; "arg2"; "arg3"; "arg4" ]
 
 let gen_firecracker_config () =
