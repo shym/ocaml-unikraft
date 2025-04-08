@@ -44,6 +44,7 @@ jobs:
           opam pin add -yn ocaml-unikraft-toolchain-x86_64.0.0.1 .
           opam pin add -yn ocaml-unikraft-x86_64.0.0.1 .
           opam pin add -yn ocaml-unikraft.0.0.1 .
+          opam pin add -yn mirage.4.9.0 'https://github.com/shym/mirage.git#wip'
       - name: Install packages
         run: |
           opam install                    \
