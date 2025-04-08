@@ -8,14 +8,7 @@ let version_ocaml_unikraft = "0.0.1"
 let version_unikraft = "0.18.0"
 let archs = [ "arm64"; "x86_64" ]
 let backends = [ ("firecracker", "Firecracker"); ("qemu", "QEMU") ]
-
-let options =
-  [
-    ("debug", "debugging", []);
-    (* The other options are not ready for prime time *)
-    (* ("lwip", "the lwIP library", [ "network-stack" ]); *)
-    (* ("ocaml-net-stack", "OCaml network stack", [ "network-stack" ]); *)
-  ]
+let options = [ ("debug", "debugging", []) ]
 
 let with_package package_name gen =
   let filename = Printf.sprintf "%s.opam" package_name in
@@ -61,17 +54,10 @@ build: [
     "OCUKPLAT=%s"
     "OCUKARCH=%s"
     "OCUKEXTLIBS=musl"
-    # "OCUKEXTLIBS+=lwip" {ocaml-unikraft-option-lwip:installed}
     "OCUKCONFIGOPTS+=debug" {ocaml-unikraft-option-debug:installed}
     "%%{name}%%.install"
   ]
 ]
-extra-source "lib-lwip.tar.gz" {
-  src:
-    "https://github.com/unikraft/lib-lwip/archive/refs/tags/RELEASE-0.18.0.tar.gz"
-  checksum:
-    "sha256=f785f9523e27704cf86050c5d8108ffbc45f8bdf6dccacbf5dd6f3dfcadbdb77"
-}
 extra-source "lib-musl.tar.gz" {
   src:
     "https://github.com/unikraft/lib-musl/archive/refs/tags/RELEASE-0.18.0.tar.gz"
@@ -89,12 +75,6 @@ extra-source "patches/lib-musl/arm64.patch" {
     "https://github.com/shym/lib-musl/commit/ecae7ade7bcf7e0fb7e869225f6db1043d3653bf.patch"
   checksum:
     "sha256=d83043f534a8da4f0133f4fbde0d78bc3a5d996ca6f7fc91b42ccf2874515514"
-}
-extra-source "lwip-UNIKRAFT-2_1_x.zip" {
-  src:
-    "https://github.com/unikraft/fork-lwip/archive/refs/heads/UNIKRAFT-2_1_x.zip"
-  checksum:
-    "sha256=1cf15ac8a70946f49327cfa4bc6923555b8c4ceeb11e4dc4f20e530b674403af"
 }
 extra-source "musl-1.2.3.tar.gz" {
   src: "https://www.musl-libc.org/releases/musl-1.2.3.tar.gz"
