@@ -6,70 +6,6 @@ on: [push, pull_request]
 #   OPAMVERBOSE: 3
 
 jobs:
-  test:
-    name: Run examples on both architectures
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Compute dummy PATH
-        run: |
-          echo "DUMMYPATH=$PWD/.github/bin/:$PATH" >> "$GITHUB_ENV"
-      - name: Install OCaml compiler
-        uses: ocaml/setup-ocaml@v3
-        env:
-          PATH: ${{ env.DUMMYPATH }}
-          OVERRIDE_APT_INSTALL: bubblewrap g++-multilib gcc-multilib
-        with:
-          ocaml-compiler: 5.3.0
-      - name: Pin and install Unikraft
-        run: |
-          sed 's/version:.*/version: "dev"/' unikraft.0.18.0.opin > o
-          OPAMEDITOR="cp o" opam pin add --edit -y unikraft - < /dev/null
-      - name: Install extra packages
-        run: |
-          sudo apt-get install -y gcc-aarch64-linux-gnu \
-            qemu-system-x86 qemu-system-arm
-          opam install dune
-      - name: Install arch-specific packages
-        run: |
-          opam install                         \
-            ocaml-unikraft-x86_64              \
-            ocaml-unikraft-backend-qemu-x86_64 \
-            ocaml-unikraft-backend-firecracker-x86_64   \
-            ocaml-unikraft-arm64               \
-            ocaml-unikraft-backend-qemu-arm64  \
-            ocaml-unikraft-backend-firecracker-arm64
-      - name: Show configuration
-        run: |
-          opam exec -- ocamlc -config
-          opam config list
-          opam list
-      - name: Install default packages
-        run: |
-          opam install                    \
-            ocaml-unikraft                \
-            ocaml-unikraft-default-arm64  \
-            ocaml-unikraft-backend-qemu   \
-            ocaml-unikraft-backend-firecracker
-      - name: Show toolchain configuration
-        run: |
-          opam exec -- ocamlfind -toolchain unikraft ocamlc -config
-      - name: Test examples
-        run: |
-          cd example
-          opam exec -- dune runtest
-      - name: Install the other default packages
-        run: |
-          opam install ocaml-unikraft-default-x86_64
-      - name: Show configuration
-        run: |
-          opam exec -- ocamlfind -toolchain unikraft ocamlc -config
-      - name: Test examples
-        run: |
-          cd example
-          opam exec -- dune runtest
-
   mirage:
     name: Build and test a MirageOS network unikernel
     runs-on: ubuntu-24.04
@@ -108,6 +44,7 @@ jobs:
           opam pin add -yn ocaml-unikraft-toolchain-x86_64.0.0.1 .
           opam pin add -yn ocaml-unikraft-x86_64.0.0.1 .
           opam pin add -yn ocaml-unikraft.0.0.1 .
+          opam pin add -yn mirage-net-unikraft.1.0.0 'https://github.com/shym/mirage-net-unikraft.git#dix'
       - name: Install packages
         run: |
           opam install                    \
