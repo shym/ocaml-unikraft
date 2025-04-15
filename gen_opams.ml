@@ -4,7 +4,7 @@
 
 (* OCaml script to generate all the *.opam files *)
 
-let version_ocaml_unikraft = "0.0.1"
+let version_ocaml_unikraft = "1.0.0"
 let version_unikraft = "0.18.0"
 let archs = [ "arm64"; "x86_64" ]
 let backends = [ ("firecracker", "Firecracker"); ("qemu", "QEMU") ]
