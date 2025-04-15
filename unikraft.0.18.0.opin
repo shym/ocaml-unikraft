@@ -22,13 +22,13 @@ url {
 }
 extra-source "strong-main.patch" {
   src:
-    "https://github.com/shym/unikraft/commit/06631bcc46cfe3e3f74824d8a7c36f1a97246889.patch"
+    "https://raw.githubusercontent.com/shym/unikraft/refs/heads/patches/strong-main.patch"
   checksum:
     "sha256=0889759befcc6a0cd350ac49d6356133393de59188173bffb4f37ca4c7f007a3"
 }
 extra-source "ibm-vs-arm.patch" {
   src:
-    "https://github.com/shym/unikraft/commit/d056838ca2af110839bdefdb094e0f37fa7b8af4.patch"
+    "https://raw.githubusercontent.com/shym/unikraft/refs/heads/patches/ibm-vs-arm.patch"
   checksum:
     "sha256=484043e9fd9afe09416155644a7d1d7cd92a5eff2563ce98c95db37cea00869e"
 }

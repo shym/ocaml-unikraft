@@ -33,13 +33,13 @@ extra-source "lib-musl.tar.gz" {
 }
 extra-source "patches/lib-musl/main-tsd.patch" {
   src:
-    "https://github.com/shym/lib-musl/commit/c6fdfa79e23e6d52df2c2d28e4eb13e91b16ad4c.patch"
+    "https://raw.githubusercontent.com/shym/lib-musl/refs/heads/patches/main-tsd.patch"
   checksum:
     "sha256=9b87cbf0743492e6949de61af6423b463031da8b14b799a775c34886cabffd28"
 }
 extra-source "patches/lib-musl/arm64.patch" {
   src:
-    "https://github.com/shym/lib-musl/commit/ecae7ade7bcf7e0fb7e869225f6db1043d3653bf.patch"
+    "https://raw.githubusercontent.com/shym/lib-musl/refs/heads/patches/arm64.patch"
   checksum:
     "sha256=d83043f534a8da4f0133f4fbde0d78bc3a5d996ca6f7fc91b42ccf2874515514"
 }
