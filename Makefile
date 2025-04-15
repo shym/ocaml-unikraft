@@ -349,10 +349,17 @@ _build/lib/unikraft: | _build/lib
 	    $(SYMLINK) "$(UNIKRAFT)" $@ ; \
 	fi
 
-# Run the examples with a local build, namely a cross compiler that's installed
-# in _build, so:
-# make -j compiler && make install-ocaml && make _build/unikraft.conf
-# and then make locatests
+# Build and install a compiler in _build (assuming you set none of the
+# variables: prefix, BIN, LIB, SHARE)
+.PHONY: localbuild
+localbuild: compiler
+	$(MAKE) install-ocaml
+	$(MAKE) _build/unikraft.conf
+	@echo "Now run:"
+	@echo "export PATH=$(prefix):$$PATH"
+	@echo "export OCAMLFIND_CONF=$$PWD/_build/unikraft.conf"
+
+# Run the examples with a local build, setting PATH and OCAMLFIND_CONF for that
 .PHONY: localtests
 localtests:
 	pwd="$$PWD" ; \
