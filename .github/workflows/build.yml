@@ -24,7 +24,7 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y qemu-system-x86 qemu-system-arm \
-            gcc-aarch64-linux-gnu g++-multilib gcc-multilib
+            gcc-aarch64-linux-gnu
           opam install dune
       - name: Install arch-specific packages
         run: |
