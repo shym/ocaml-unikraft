@@ -8,18 +8,12 @@ on: [push, pull_request]
 jobs:
   test:
     name: Run examples on both architectures
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Compute dummy PATH
-        run: |
-          echo "DUMMYPATH=$PWD/.github/bin/:$PATH" >> "$GITHUB_ENV"
       - name: Install OCaml compiler
         uses: ocaml/setup-ocaml@v3
-        env:
-          PATH: ${{ env.DUMMYPATH }}
-          OVERRIDE_APT_INSTALL: bubblewrap g++-multilib gcc-multilib
         with:
           ocaml-compiler: 5.3.0
       - name: Pin and install Unikraft
@@ -28,17 +22,17 @@ jobs:
           OPAMEDITOR="cp o" opam pin add --edit -y unikraft - < /dev/null
       - name: Install extra packages
         run: |
-          sudo apt-get install -y gcc-aarch64-linux-gnu \
-            qemu-system-x86 qemu-system-arm
+          sudo apt-get install -y qemu-system-x86 qemu-system-arm \
+            gcc-aarch64-linux-gnu g++-multilib gcc-multilib
           opam install dune
       - name: Install arch-specific packages
         run: |
-          opam install                         \
-            ocaml-unikraft-x86_64              \
-            ocaml-unikraft-backend-qemu-x86_64 \
-            ocaml-unikraft-backend-firecracker-x86_64   \
-            ocaml-unikraft-arm64               \
-            ocaml-unikraft-backend-qemu-arm64  \
+          opam install                                \
+            ocaml-unikraft-x86_64                     \
+            ocaml-unikraft-backend-qemu-x86_64        \
+            ocaml-unikraft-backend-firecracker-x86_64 \
+            ocaml-unikraft-arm64                      \
+            ocaml-unikraft-backend-qemu-arm64         \
             ocaml-unikraft-backend-firecracker-arm64
       - name: Show configuration
         run: |
@@ -72,7 +66,7 @@ jobs:
 
   mirage:
     name: Build and test a MirageOS network unikernel
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -81,14 +75,8 @@ jobs:
         with:
           repository: mirage/mirage-skeleton
           path: skeleton
-      - name: Compute dummy PATH
-        run: |
-          echo "DUMMYPATH=$PWD/.github/bin/:$PATH" >> "$GITHUB_ENV"
       - name: Install OCaml compiler
         uses: ocaml/setup-ocaml@v3
-        env:
-          PATH: ${{ env.DUMMYPATH }}
-          OVERRIDE_APT_INSTALL: bubblewrap qemu-system-x86
         with:
           ocaml-compiler: 5.3.0
           opam-repositories: |
@@ -100,14 +88,14 @@ jobs:
       - name: Pin necessary packages
         run: |
           opam pin add -yn ocaml-unikraft-backend-qemu-x86_64.0.18.0 .
-          opam pin add -yn ocaml-unikraft-backend-qemu.0.0.1 .
-          opam pin add -yn ocaml-unikraft-default-x86_64.0.0.1 .
+          opam pin add -yn ocaml-unikraft-backend-qemu.1.0.0 .
+          opam pin add -yn ocaml-unikraft-default-x86_64.1.0.0 .
           opam pin add -yn ocaml-unikraft-option-debug.0.18.0 .
           opam pin add -yn ocaml-unikraft-option-lwip.0.18.0 .
           opam pin add -yn ocaml-unikraft-option-ocaml-net-stack.0.18.0 .
-          opam pin add -yn ocaml-unikraft-toolchain-x86_64.0.0.1 .
-          opam pin add -yn ocaml-unikraft-x86_64.0.0.1 .
-          opam pin add -yn ocaml-unikraft.0.0.1 .
+          opam pin add -yn ocaml-unikraft-toolchain-x86_64.1.0.0 .
+          opam pin add -yn ocaml-unikraft-x86_64.1.0.0 .
+          opam pin add -yn ocaml-unikraft.1.0.0 .
       - name: Install packages
         run: |
           opam install                    \
@@ -129,6 +117,9 @@ jobs:
           cd skeleton/device-usage/network/
           opam exec -- mirage configure -t unikraft-qemu
           opam exec -- make
+      - name: Install QEMU
+        run: |
+          sudo apt-get install -y qemu-system-x86
       - name: Test skeleton
         run: |
           set -x
@@ -140,6 +131,7 @@ jobs:
           sudo ip link set dev tap0 up
           cd skeleton/device-usage/network/
           (sleep 20s; pkill 'qemu-system.*') &
+          echo "echo Failure; false" > res
           (set +e;                                       \
             sleep 8s;                                    \
             r1=0; r2=0;                                  \
@@ -149,7 +141,6 @@ jobs:
             set +x;                                      \
             case "$r1,$r2" in                            \
               52,52) echo "echo Success; true" > res ;;  \
-              *)     echo "echo Failure; false" > res ;; \
             esac ) &
           qemu-system-x86_64 -nographic -nodefaults -serial stdio -machine q35 \
             -cpu "qemu64,-vmx,-svm,+x2apic,+pdpe1gb,+rdrand,+rdseed" -m 1G     \
