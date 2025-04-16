@@ -19,19 +19,6 @@ install_file() {
   fi
 }
 
-walk_tree() {
-  # walk_tree <srcprefix> [destprefix]
-  # where srcprefix is not empty and destprefix ends up with a slash when set
-  for f in "$1"/*; do
-    base="${f##*/}"
-    if [ -d "$f" ]; then
-      walk_tree "$f" "$2$base/"
-    else
-      install_file "$f" "$2$base"
-    fi
-  done
-}
-
 main() {
   printf '%s: [\n' bin
   for f in "$@"; do
