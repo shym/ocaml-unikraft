@@ -363,7 +363,7 @@ localbuild: compiler
 .PHONY: localtests
 localtests:
 	pwd="$$PWD" ; \
-	  cd example/ && \
+	  cd examples/all/ && \
 	  PATH="$$pwd/$(BLDBIN):$$PATH" \
 	  OCAMLFIND_CONF="$$pwd/_build/unikraft.conf" \
 	  dune runtest
