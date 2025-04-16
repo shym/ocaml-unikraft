@@ -5,9 +5,9 @@ maintainer: "samuel@tarides.com"
 homepage: "https://github.com/mirage/ocaml-unikraft/"
 bug-reports: "https://github.com/mirage/ocaml-unikraft/issues"
 synopsis:
-  "C toolchain to build an OCaml cross-compiler to the freestanding Unikraft arm64 backends"
+  "C toolchain to build an OCaml cross compiler to the freestanding Unikraft arm64 backends"
 description:
-  "This package provides a C toolchain to build an OCaml cross-compiler, suitable for linking with a Unikraft arm64 unikernel."
+  "This package provides a C toolchain to build an OCaml cross compiler, suitable for linking with a Unikraft arm64 unikernel."
 authors: "Samuel Hym"
 license: "MIT"
 depends: [

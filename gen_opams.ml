@@ -166,9 +166,9 @@ let toolchain_package arch =
       Printf.fprintf out
         {|
 synopsis:
-  "C toolchain to build an OCaml cross-compiler to the freestanding Unikraft %s backends"
+  "C toolchain to build an OCaml cross compiler to the freestanding Unikraft %s backends"
 description:
-  "This package provides a C toolchain to build an OCaml cross-compiler, suitable for linking with a Unikraft %s unikernel."
+  "This package provides a C toolchain to build an OCaml cross compiler, suitable for linking with a Unikraft %s unikernel."
 authors: "Samuel Hym"
 license: "MIT"
 depends: [
@@ -192,9 +192,9 @@ let compiler_package arch =
   with_package false package_name version_ocaml_unikraft (fun out ->
       Printf.fprintf out
         {|
-synopsis: "OCaml cross-compiler to the freestanding Unikraft %s backends"
+synopsis: "OCaml cross compiler to the freestanding Unikraft %s backends"
 description:
-  "This package provides a OCaml cross-compiler, suitable for linking with a Unikraft %s unikernel."
+  "This package provides an OCaml cross compiler, suitable for linking with a Unikraft %s unikernel."
 authors: "Samuel Hym"
 license: ["MIT" "LGPL-2.1-or-later WITH OCaml-LGPL-linking-exception"]
 depends: [
@@ -228,9 +228,9 @@ let default_compiler_package arch =
       Printf.fprintf out
         {|
 synopsis:
-  "OCaml default cross-compiler to the freestanding Unikraft %s backends"
+  "OCaml default cross compiler to the freestanding Unikraft %s backends"
 description:
-  "This package provides a OCaml cross-compiler, suitable for linking with a Unikraft %s unikernel, as the default `unikraft` ocamlfind toolchain."
+  "This package provides an OCaml cross compiler, suitable for linking with a Unikraft %s unikernel, as the default `unikraft` ocamlfind toolchain."
 authors: "Samuel Hym"
 license: "MIT"
 depends: ["ocaml-unikraft-%s" "ocamlfind"]
@@ -248,7 +248,7 @@ let default_backend_package backend =
       Printf.fprintf out
         {|
 synopsis:
-  "Virtual package to ensure the %s Unikraft backend is installed for the default cross-compiler"
+  "Virtual package to ensure the %s Unikraft backend is installed for the default cross compiler"
 description:
   "This virtual package ensures that the %s backend is installed for the default `unikraft` ocamlfind cross toolchain."
 authors: "Samuel Hym"
@@ -266,9 +266,9 @@ let main_package () =
       Printf.fprintf out
         {|
 synopsis:
-  "Virtual package to install one of the OCaml default cross-compilers to the freestanding Unikraft backends"
+  "Virtual package to install one of the OCaml default cross compilers to the freestanding Unikraft backends"
 description:
-  "This virtual package ensures that an OCaml cross-compiler is available for linking with a Unikraft unikernel as the default `unikraft` ocamlfind toolchain. Explicitly choose one among the ocaml-unikraft-default-* packages to control which one is actually installed."
+  "This virtual package ensures that an OCaml cross compiler is available for linking with a Unikraft unikernel as the default `unikraft` ocamlfind toolchain. Explicitly choose one among the ocaml-unikraft-default-* packages to control which one is actually installed."
 authors: "Samuel Hym"
 license: "MIT"
 depends: ["ocaml-unikraft-default-x86_64" | "ocaml-unikraft-default-arm64"]

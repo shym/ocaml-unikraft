@@ -5,7 +5,7 @@ maintainer: "samuel@tarides.com"
 homepage: "https://github.com/mirage/ocaml-unikraft/"
 bug-reports: "https://github.com/mirage/ocaml-unikraft/issues"
 synopsis:
-  "Virtual package to ensure the Firecracker Unikraft backend is installed for the default cross-compiler"
+  "Virtual package to ensure the Firecracker Unikraft backend is installed for the default cross compiler"
 description:
   "This virtual package ensures that the Firecracker backend is installed for the default `unikraft` ocamlfind cross toolchain."
 authors: "Samuel Hym"
