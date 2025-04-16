@@ -52,7 +52,9 @@ jobs:
           opam exec -- ocamlfind -toolchain unikraft ocamlc -config
       - name: Test examples
         run: |
-          cd example
+          cd examples/simple/
+          opam exec -- dune build
+          cd ../all/
           opam exec -- dune runtest
       - name: Install the other default packages
         run: |
@@ -62,7 +64,7 @@ jobs:
           opam exec -- ocamlfind -toolchain unikraft ocamlc -config
       - name: Test examples
         run: |
-          cd example
+          cd examples/all/
           opam exec -- dune runtest
 
   mirage:
