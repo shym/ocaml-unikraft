@@ -4,33 +4,90 @@
 
 (* OCaml script to generate all the *.opam files *)
 
+let repository_layout = ref false
+let url = ref None
+
+let _ =
+  let url_src = ref "" in
+  let url_and_checksum =
+    let seen = ref 0 in
+    fun arg ->
+      match !seen with
+      | 0 ->
+          url_src := arg;
+          incr seen
+      | 1 -> url := Some (!url_src, arg)
+      | _ -> failwith ("Don't know what to do with argument: " ^ arg)
+  in
+  Arg.parse
+    [
+      ( "-r",
+        Arg.Set repository_layout,
+        "Use the standard opam-repository layout (packages/...)" );
+    ]
+    url_and_checksum "gen_opams [-r]"
+
 let version_ocaml_unikraft = "1.0.0"
 let version_unikraft = "0.18.0"
 let archs = [ "arm64"; "x86_64" ]
 let backends = [ ("firecracker", "Firecracker"); ("qemu", "QEMU") ]
 let options = [ ("debug", "debugging", []) ]
 
-let with_package package_name gen =
-  let filename = Printf.sprintf "%s.opam" package_name in
+let mkdir_p chunks =
+  List.fold_left
+    (fun prefix chunk ->
+      let dir = Filename.concat prefix chunk in
+      (try Sys.mkdir dir 0o755
+       with Sys_error msg -> assert (String.ends_with ~suffix:"exists" msg));
+      dir)
+    "" chunks
+
+let with_package virt package_name version gen =
+  let filename =
+    if !repository_layout then
+      Filename.concat
+        (mkdir_p
+           [
+             "packages";
+             package_name;
+             Printf.sprintf "%s.%s" package_name version;
+           ])
+        "opam"
+    else Printf.sprintf "%s.opam" package_name
+  in
   Out_channel.with_open_bin filename (fun out ->
-      Printf.fprintf out
-        {|opam-version: "2.0"
+      Printf.fprintf out {|opam-version: "2.0"|};
+      if not !repository_layout then
+        Printf.fprintf out {|
 name: "%s"
+version: "%s"|} package_name version;
+      Printf.fprintf out
+        {|
 maintainer: "samuel@tarides.com"
 homepage: "https://github.com/shym/ocaml-unikraft/"
-bug-reports: "https://github.com/shym/ocaml-unikraft/issues"|}
-        package_name;
-      gen out)
+bug-reports: "https://github.com/shym/ocaml-unikraft/issues"|};
+      gen out;
+      match (virt, !url) with
+      | true, _ | _, None -> ()
+      | false, Some (src, checksum) ->
+          Printf.fprintf out
+            {|url {
+  src:
+    "%s"
+  checksum:
+    "sha256=%s"
+}
+|}
+            src checksum)
 
 let backend_package arch backend =
   let short_name, long_name = backend in
   let package_name =
     Printf.sprintf "ocaml-unikraft-backend-%s-%s" short_name arch
   in
-  with_package package_name (fun out ->
+  with_package false package_name version_unikraft (fun out ->
       Printf.fprintf out
         {|
-version: "%s"
 synopsis: "%s/%s Unikraft backend for OCaml"
 authors: ["Samuel Hym" "Unikraft contributors"]
 license: ["MIT" "BSD-3-Clause" "GPL-2.0-only"]
@@ -38,7 +95,7 @@ depends: [
   "unikraft" {= version}
 ]
 depopts: [|}
-        version_unikraft long_name arch;
+        long_name arch;
       List.iter
         (fun (opt, _, _) ->
           Printf.fprintf out "\n  \"ocaml-unikraft-option-%s\"" opt)
@@ -87,31 +144,27 @@ extra-source "musl-1.2.3.tar.gz" {
 let option_package option =
   let short_name, long_name, conflicts = option in
   let package_name = Printf.sprintf "ocaml-unikraft-option-%s" short_name in
-  with_package package_name (fun out ->
+  with_package true package_name version_unikraft (fun out ->
       Printf.fprintf out
         {|
-version: "%s"
 synopsis:
   "Virtual package to enable %s in the Unikraft backends"
 authors: "Samuel Hym"
 license: "MIT"
 |}
-        version_unikraft long_name;
+        long_name;
       match conflicts with
       | [] -> ()
       | _ ->
           Printf.fprintf out "conflict-class: [\n";
-          List.iter
-            (Printf.fprintf out "  \"ocaml-unikraft-%s\"\n")
-            conflicts;
+          List.iter (Printf.fprintf out "  \"ocaml-unikraft-%s\"\n") conflicts;
           Printf.fprintf out "]\n")
 
 let toolchain_package arch =
   let package_name = Printf.sprintf "ocaml-unikraft-toolchain-%s" arch in
-  with_package package_name (fun out ->
+  with_package false package_name version_ocaml_unikraft (fun out ->
       Printf.fprintf out
         {|
-version: "%s"
 synopsis:
   "C toolchain to build an OCaml cross-compiler to the freestanding Unikraft %s backends"
 description:
@@ -132,14 +185,13 @@ build: [
   ]
 ]
 |}
-        version_ocaml_unikraft arch arch arch arch arch)
+        arch arch arch arch arch)
 
 let compiler_package arch =
   let package_name = Printf.sprintf "ocaml-unikraft-%s" arch in
-  with_package package_name (fun out ->
+  with_package false package_name version_ocaml_unikraft (fun out ->
       Printf.fprintf out
         {|
-version: "%s"
 synopsis: "OCaml cross-compiler to the freestanding Unikraft %s backends"
 description:
   "This package provides a OCaml cross-compiler, suitable for linking with a Unikraft %s unikernel."
@@ -168,14 +220,13 @@ install: [
   [make "install-ocaml"]
 ]
 |}
-        version_ocaml_unikraft arch arch arch arch)
+        arch arch arch arch)
 
 let default_compiler_package arch =
   let package_name = Printf.sprintf "ocaml-unikraft-default-%s" arch in
-  with_package package_name (fun out ->
+  with_package false package_name version_ocaml_unikraft (fun out ->
       Printf.fprintf out
         {|
-version: "%s"
 synopsis:
   "OCaml default cross-compiler to the freestanding Unikraft %s backends"
 description:
@@ -188,15 +239,14 @@ build: [
   [make "prefix=%%{prefix}%%" "OCUKARCH=%s" "%%{name}%%.install"]
 ]
 |}
-        version_ocaml_unikraft arch arch arch arch)
+        arch arch arch arch)
 
 let default_backend_package backend =
   let short_name, long_name = backend in
   let package_name = Printf.sprintf "ocaml-unikraft-backend-%s" short_name in
-  with_package package_name (fun out ->
+  with_package true package_name version_ocaml_unikraft (fun out ->
       Printf.fprintf out
         {|
-version: "%s"
 synopsis:
   "Virtual package to ensure the %s Unikraft backend is installed for the default cross-compiler"
 description:
@@ -209,13 +259,12 @@ depends: [
   ("ocaml-unikraft-default-arm64" & "ocaml-unikraft-backend-%s-arm64")
 ]
 |}
-        version_ocaml_unikraft long_name long_name short_name short_name)
+        long_name long_name short_name short_name)
 
 let main_package () =
-  with_package "ocaml-unikraft" (fun out ->
+  with_package true "ocaml-unikraft" version_ocaml_unikraft (fun out ->
       Printf.fprintf out
         {|
-version: "%s"
 synopsis:
   "Virtual package to install one of the OCaml default cross-compilers to the freestanding Unikraft backends"
 description:
@@ -223,8 +272,7 @@ description:
 authors: "Samuel Hym"
 license: "MIT"
 depends: ["ocaml-unikraft-default-x86_64" | "ocaml-unikraft-default-arm64"]
-|}
-        version_ocaml_unikraft)
+|})
 
 let _ =
   List.iter (fun arch -> List.iter (backend_package arch) backends) archs;

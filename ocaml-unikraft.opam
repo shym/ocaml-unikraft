@@ -1,9 +1,9 @@
 opam-version: "2.0"
 name: "ocaml-unikraft"
+version: "1.0.0"
 maintainer: "samuel@tarides.com"
 homepage: "https://github.com/shym/ocaml-unikraft/"
 bug-reports: "https://github.com/shym/ocaml-unikraft/issues"
-version: "1.0.0"
 synopsis:
   "Virtual package to install one of the OCaml default cross-compilers to the freestanding Unikraft backends"
 description:
