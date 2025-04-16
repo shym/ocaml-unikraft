@@ -4,7 +4,7 @@
 
 Contributions are most welcome!
 
-- [File issues](https://github.com/shym/ocaml-unikraft/issues) to report bugs or feature requests.
+- [File issues](https://github.com/mirage/ocaml-unikraft/issues) to report bugs or feature requests.
 - [Contribute code or documentation](./CONTRIBUTING.md).
 
 ---

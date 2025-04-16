@@ -64,8 +64,8 @@ version: "%s"|} package_name version;
       Printf.fprintf out
         {|
 maintainer: "samuel@tarides.com"
-homepage: "https://github.com/shym/ocaml-unikraft/"
-bug-reports: "https://github.com/shym/ocaml-unikraft/issues"|};
+homepage: "https://github.com/mirage/ocaml-unikraft/"
+bug-reports: "https://github.com/mirage/ocaml-unikraft/issues"|};
       gen out;
       match (virt, !url) with
       | true, _ | _, None -> ()

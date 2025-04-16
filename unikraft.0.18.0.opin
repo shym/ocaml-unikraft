@@ -7,7 +7,7 @@ maintainer: "samuel@tarides.com"
 authors: "Unikraft contributors"
 license: ["BSD-3-Clause" "MIT" "GPL-2.0"]
 homepage: "https://unikraft.org"
-bug-reports: "https://github.com/shym/ocaml-unikraft/issues"
+bug-reports: "https://github.com/mirage/ocaml-unikraft/issues"
 depends: [
     "conf-bison"
     "conf-flex"
