@@ -16,6 +16,8 @@
 
 (include dune.inc)
 
+; Wrap the simple startup.c in a library so that it can be shared among all the
+; examples
 (library
  (name unikraftstartup)
  (modules)
