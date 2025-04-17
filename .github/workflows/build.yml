@@ -135,15 +135,15 @@ jobs:
           cd skeleton/device-usage/network/
           (sleep 20s; pkill 'qemu-system.*') &
           echo "echo Failure; false" > res
-          (set +e;                                       \
-            sleep 8s;                                    \
-            r1=0; r2=0;                                  \
-            curl 10.0.0.2:8080 || r1=$?;                 \
-            sleep 1s;                                    \
-            curl 10.0.0.2:8080 || r2=$?;                 \
-            set +x;                                      \
-            case "$r1,$r2" in                            \
-              52,52) echo "echo Success; true" > res ;;  \
+          (set +e;                                      \
+            sleep 8s;                                   \
+            r1=0; r2=0;                                 \
+            curl -fsS 10.0.0.2:8080 || r1=$?;           \
+            sleep 1s;                                   \
+            curl -fsS 10.0.0.2:8080 || r2=$?;           \
+            set +x;                                     \
+            case "$r1,$r2" in                           \
+              52,52) echo "echo Success; true" > res ;; \
             esac ) &
           qemu-system-x86_64 -nographic -nodefaults -serial stdio -machine q35 \
             -cpu "qemu64,-vmx,-svm,+x2apic,+pdpe1gb,+rdrand,+rdseed" -m 1G     \
