@@ -83,7 +83,7 @@ $ qemu-system-x86_64 -nographic -nodefaults -serial stdio -kernel _build/unikraf
 ```
 
 The `all` subdirectory is a bit more involved, in particular because it supports
-building for QEMU or Firecracker and to run the resulting unikernels and becausE
+building for QEMU or Firecracker and to run the resulting unikernels and because
 both QEMU and Firecracker require some configuration to run a unikernel. The
 OCaml code of those examples are all quite simple, though.
 
