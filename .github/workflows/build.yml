@@ -23,8 +23,7 @@ jobs:
       - name: Install extra packages
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y qemu-system-x86 qemu-system-arm \
-            gcc-aarch64-linux-gnu
+          sudo apt-get install -y qemu-system-x86 qemu-system-arm
           opam install dune
       - name: Install arch-specific packages
         run: |
