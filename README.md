@@ -70,6 +70,24 @@ So the easiest way to go about installing this project is to use the standard
 [`pin`]: https://opam.ocaml.org/doc/Usage.html#opam-pin
 
 
+## Examples
+
+The `examples` directory contains a couple of small examples. In particular, the
+`simple` subdirectory contains a single easy Hello-World example. You can simply
+test it thus:
+
+```
+$ cd examples/simple/
+$ dune build
+$ qemu-system-x86_64 -nographic -nodefaults -serial stdio -kernel _build/unikraft/hello.exe
+```
+
+The `all` subdirectory is a bit more involved, in particular because it supports
+building for QEMU or Firecracker and to run the resulting unikernels and becausE
+both QEMU and Firecracker require some configuration to run a unikernel. The
+OCaml code of those examples are all quite simple, though.
+
+
 ## Development
 
 It is possible to build this project fully locally, which is really what is used
