@@ -14,6 +14,9 @@ depends: [
 depopts: [
   "ocaml-unikraft-option-debug"
 ]
+depexts: [
+  ["gcc-aarch64-linux-gnu"] {os-family = "debian" & arch != "arm64"}
+]
 build: [
   [
     make

@@ -33,6 +33,12 @@ let archs = [ "arm64"; "x86_64" ]
 let backends = [ ("firecracker", "Firecracker"); ("qemu", "QEMU") ]
 let options = [ ("debug", "debugging", []) ]
 
+(** How the architecture appears in the tool prefixes *)
+let prefix_arch = function
+  | "arm64" -> "aarch64"
+  | "x86_64" as x -> x
+  | x -> failwith ("Unsupported arch: " ^ x)
+
 let mkdir_p chunks =
   List.fold_left
     (fun prefix chunk ->
@@ -108,6 +114,9 @@ depopts: [|}
       Printf.fprintf out
         {|
 ]
+depexts: [
+  ["gcc-%s-linux-gnu"] {os-family = "debian" & arch != "%s"}
+]
 build: [
   [
     make
@@ -144,7 +153,7 @@ extra-source "musl-1.2.3.tar.gz" {
     "sha256=7d5b0b6062521e4627e099e4c9dc8248d32a30285e959b7eecaa780cf8cfd4a4"
 }
 |}
-        short_name arch)
+        (prefix_arch arch) arch short_name arch)
 
 let option_package option =
   let short_name, long_name, conflicts = option in
