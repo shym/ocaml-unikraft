@@ -132,7 +132,10 @@ let gen_qemu_call target =
           "-machine";
           "q35";
           "-cpu";
-          "qemu64,-vmx,-svm,+x2apic,+pdpe1gb,+rdrand,+rdseed";
+          "qemu64,-vmx,-svm,+pdpe1gb,+rdrand,+rdseed";
+          (* The x2apic feature appears in the options used by Unikraft to
+             launch QEMU, but it is not supported in CI and not used in our
+             simple examples so it isn’t enabled here *)
         ]
   | "arm64", _, _ -> pr [ "-machine"; "virt"; "-cpu"; "cortex-a72" (* "max" *) ]
   | _ -> assert false (* as we would have failed before *)
