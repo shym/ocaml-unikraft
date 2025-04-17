@@ -67,7 +67,7 @@ maintainer: "samuel@tarides.com"
 homepage: "https://github.com/mirage/ocaml-unikraft/"
 bug-reports: "https://github.com/mirage/ocaml-unikraft/issues"|};
       gen out;
-      match (virt, !url) with
+      (match (virt, !url) with
       | true, _ | _, None -> ()
       | false, Some (src, checksum) ->
           Printf.fprintf out
@@ -78,7 +78,9 @@ bug-reports: "https://github.com/mirage/ocaml-unikraft/issues"|};
     "sha256=%s"
 }
 |}
-            src checksum)
+            src checksum);
+      if !repository_layout then
+        Printf.fprintf out "x-maintenance-intent: [\"(latest)\"]\n")
 
 let backend_package arch backend =
   let short_name, long_name = backend in
