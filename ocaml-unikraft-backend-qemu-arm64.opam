@@ -16,6 +16,7 @@ depopts: [
 ]
 depexts: [
   ["gcc-aarch64-linux-gnu"] {os-family = "debian" & arch != "arm64"}
+  ["aarch64-linux-gnu-gcc"] {os-family = "arch" & arch != "arm64"}
 ]
 build: [
   [

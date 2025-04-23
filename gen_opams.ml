@@ -115,7 +115,17 @@ depopts: [|}
         {|
 ]
 depexts: [
-  ["gcc-%s-linux-gnu"] {os-family = "debian" & arch != "%s"}
+  ["gcc-%s-linux-gnu"] {os-family = "debian" & arch != "%s"}|}
+        (prefix_arch arch) arch;
+      (match arch with
+      | "arm64" ->
+          Printf.fprintf out
+            {|
+  ["%s-linux-gnu-gcc"] {os-family = "arch" & arch != "%s"}|}
+            (prefix_arch arch) arch
+      | _ -> () (* No cross compiler to x86_64 packaged in aarch64 Arch *));
+      Printf.fprintf out
+        {|
 ]
 build: [
   [
@@ -153,7 +163,7 @@ extra-source "musl-1.2.3.tar.gz" {
     "sha256=7d5b0b6062521e4627e099e4c9dc8248d32a30285e959b7eecaa780cf8cfd4a4"
 }
 |}
-        (prefix_arch arch) arch short_name arch)
+        short_name arch)
 
 let option_package option =
   let short_name, long_name, conflicts = option in
