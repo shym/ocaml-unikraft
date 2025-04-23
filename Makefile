@@ -365,7 +365,7 @@ downloads:
 	    "b51afee0227c0c8c419dd001fb6b6f57b529e5cadcd437afdd05e2e8667a1e2e  lib-musl.tar.gz" \
 	    "d83043f534a8da4f0133f4fbde0d78bc3a5d996ca6f7fc91b42ccf2874515514  patches/lib-musl/arm64.patch" \
 	    "9b87cbf0743492e6949de61af6423b463031da8b14b799a775c34886cabffd28  patches/lib-musl/main-tsd.patch" \
-	    | sha256sum -c
+	    | sha256sum -c -
 
 # Build and install a compiler in _build (assuming you set none of the
 # variables: prefix, BIN, LIB, SHARE)
