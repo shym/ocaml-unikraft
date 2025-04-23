@@ -1,7 +1,7 @@
 From cb9031aa59d7b971b1dd5ef57f5b2d65f47d9b30 Mon Sep 17 00:00:00 2001
 From: Samuel Hym <samuel@tarides.com>
 Date: Mon, 13 Jan 2025 12:19:19 +0100
-Subject: [PATCH 15/22] Add a `Config` variable for the need of the GNU
+Subject: [PATCH 15/21] Add a `Config` variable for the need of the GNU
  non-executable stack note
 
 Add a `Config.with_nonexecstack_note` variable to indicate whether the

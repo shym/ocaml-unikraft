@@ -1,7 +1,7 @@
 From e9b2f2c7ec6ed932cb9cc65f6a1648dacd68f1da Mon Sep 17 00:00:00 2001
 From: Samuel Hym <samuel@tarides.com>
 Date: Tue, 7 Jan 2025 13:50:21 +0100
-Subject: [PATCH 12/22] Add a dummy `caml_debugger_saved_instruction` when
+Subject: [PATCH 12/21] Add a dummy `caml_debugger_saved_instruction` when
  `HAS_SOCKETS` is false
 
 The `caml_debugger_saved_instruction` function is called unconditionally

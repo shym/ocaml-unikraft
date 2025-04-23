@@ -1,7 +1,7 @@
 From ddf39e7e09d03f5e83c92b6bb1bc094e8f116a66 Mon Sep 17 00:00:00 2001
 From: Samuel Hym <samuel@tarides.com>
 Date: Fri, 19 Jul 2024 11:33:29 +0200
-Subject: [PATCH 08/22] Add a `Config` entry for the target OS type
+Subject: [PATCH 08/21] Add a `Config` entry for the target OS type
 
 Define `Config.target_os_type` so that:
 

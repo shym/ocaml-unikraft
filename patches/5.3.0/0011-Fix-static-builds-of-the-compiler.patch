@@ -1,7 +1,7 @@
 From c87901a8b99e5fa91fd67c8d7a9560c6aec0520f Mon Sep 17 00:00:00 2001
 From: David Allsopp <david.allsopp@metastack.com>
 Date: Sun, 15 Dec 2024 17:34:16 +0000
-Subject: [PATCH 11/22] Fix static builds of the compiler
+Subject: [PATCH 11/21] Fix static builds of the compiler
 
 ocamlc -custom needs to include <caml/mlvalues.h> and therefore the
 build has -I runtime in order to facilitate this. -I runtime breaks

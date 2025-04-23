@@ -1,7 +1,7 @@
 From 17c038723eeb6a63de43b7823c55963788e96a7b Mon Sep 17 00:00:00 2001
 From: Samuel Hym <samuel@tarides.com>
 Date: Mon, 26 Feb 2024 11:51:11 +0100
-Subject: [PATCH 21/22] Allow `ocaml` in a triplet target to build freestanding
+Subject: [PATCH 21/21] Allow `ocaml` in a triplet target to build freestanding
  cross compilers
 
 Allow `ocaml` to be used as the last component of the target triplet in

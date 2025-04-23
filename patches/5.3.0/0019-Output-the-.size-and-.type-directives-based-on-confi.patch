@@ -1,7 +1,7 @@
 From a29d3220e1fd926af4c2eae8a7c73545cf69c006 Mon Sep 17 00:00:00 2001
 From: Samuel Hym <samuel@tarides.com>
 Date: Fri, 31 Jan 2025 19:13:28 +0100
-Subject: [PATCH 19/22] Output the `.size` and `.type` directives based on
+Subject: [PATCH 19/21] Output the `.size` and `.type` directives based on
  `configure` result
 
 Uniformly rely on the detection during `configure` of whether the

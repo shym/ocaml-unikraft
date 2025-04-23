@@ -1,7 +1,7 @@
 From da0ccc2fbe57e3f2663503a1c44dbebe899699b1 Mon Sep 17 00:00:00 2001
 From: Samuel Hym <samuel@tarides.com>
 Date: Mon, 13 Jan 2025 12:07:00 +0100
-Subject: [PATCH 14/22] Detect the need for the GNU note for non-executable
+Subject: [PATCH 14/21] Detect the need for the GNU note for non-executable
  stack
 
 Detect during `configure` whether the C compiler generates a

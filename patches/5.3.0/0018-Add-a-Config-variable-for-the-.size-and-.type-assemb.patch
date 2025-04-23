@@ -1,7 +1,7 @@
 From d7c2ab889d76d78f2e46aa9f0d89096695babc28 Mon Sep 17 00:00:00 2001
 From: Samuel Hym <samuel@tarides.com>
 Date: Fri, 31 Jan 2025 18:33:42 +0100
-Subject: [PATCH 18/22] Add a `Config` variable for the `.size` and `.type`
+Subject: [PATCH 18/21] Add a `Config` variable for the `.size` and `.type`
  assembler directives
 
 Add a `Config.asm_size_type_directives` variable to indicate whether the

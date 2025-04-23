@@ -1,7 +1,7 @@
 From a33717f0c294d288865f26d32240caf733cb79ab Mon Sep 17 00:00:00 2001
 From: Samuel Hym <samuel@tarides.com>
 Date: Tue, 3 Sep 2024 15:18:23 +0200
-Subject: [PATCH 10/22] Enable bootstrapping flexdll in the cross-compiler
+Subject: [PATCH 10/21] Enable bootstrapping flexdll in the cross-compiler
  setting
 
 Add a rule to build flexdll in the cross-compiler setting, namely

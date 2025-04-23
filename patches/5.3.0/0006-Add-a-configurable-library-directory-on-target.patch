@@ -1,7 +1,7 @@
 From 06f5a281e01fc42a8d597eb75ad73fc220da7170 Mon Sep 17 00:00:00 2001
 From: Samuel Hym <samuel@tarides.com>
 Date: Wed, 2 Oct 2024 13:24:03 +0200
-Subject: [PATCH 06/22] Add a configurable library directory on target
+Subject: [PATCH 06/21] Add a configurable library directory on target
 
 Add a `TARGET_LIBDIR` variable to `configure` and assign a Makefile
 `TARGET_LIBDIR` variable with it

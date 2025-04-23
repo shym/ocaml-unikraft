@@ -1,7 +1,7 @@
 From 8a9babc8d4db19b0015a6c4f10b4baee72026bec Mon Sep 17 00:00:00 2001
 From: Samuel Hym <samuel@tarides.com>
 Date: Fri, 31 Jan 2025 18:25:06 +0100
-Subject: [PATCH 17/22] Detect support for `.size` and `.type` assembler
+Subject: [PATCH 17/21] Detect support for `.size` and `.type` assembler
  directives
 
 Detect during `configure` whether the C compiler generates `.size` and
