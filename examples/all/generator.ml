@@ -9,7 +9,7 @@
 
 let pr fmt out entries = List.iter (Printf.fprintf out fmt) entries
 
-let print_dune_one_test test extralibs extraargs =
+let print_dune_one_test test extralibs extraargs exitcodes =
   let concat fmt out entries =
     match entries with
     | [] -> ()
@@ -40,11 +40,7 @@ let print_dune_one_test test extralibs extraargs =
    (= %%{env:UNIKRAFTBACKEND=qemu} qemu)))
  (action
   (with-accepted-exit-codes
-   (or
-    0
-    83
-    ; 83: Unikraft successful exit with ISA debug
-    )
+   %s
    (run
     %%{read-lines:qemu-call}
     -nographic
@@ -77,14 +73,25 @@ let print_dune_one_test test extralibs extraargs =
   (run firecracker --no-api --config-file %%{config})))
 
 |}
-    test (pr " %s") extralibs test qemu_args extraargs test test (pr " %S")
-    extraargs test test
+    test (pr " %s") extralibs
+    (match exitcodes with
+    | None ->
+        {|(or
+    0
+    83
+    ; 83: Unikraft successful exit with ISA debug
+    )|}
+    | Some exitcodes -> exitcodes)
+    test qemu_args extraargs test test (pr " %S") extraargs test test
 
 let gen_dune () =
-  print_dune_one_test "hello" [] [];
-  print_dune_one_test "sleeper" [ "unix" ] [];
-  print_dune_one_test "threader" [ "unix"; "threads" ] [];
-  print_dune_one_test "args" [] [ "arg1"; "arg2"; "arg3"; "arg4" ]
+  print_dune_one_test "hello" [] [] None;
+  print_dune_one_test "sleeper" [ "unix" ] [] None;
+  print_dune_one_test "threader" [ "unix"; "threads" ] [] None;
+  print_dune_one_test "args" [] [ "arg1"; "arg2"; "arg3"; "arg4" ] None;
+  (* Unfortunately, I see many crashing unikernels nevertheless reported as
+     returning 83 *)
+  print_dune_one_test "fail" [] [] (Some "(or 0 83 85)")
 
 let gen_firecracker_config () =
   let test = Sys.argv.(2) and args = Array.to_list Sys.argv |> List.drop 3 in

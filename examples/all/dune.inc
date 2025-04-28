@@ -204,3 +204,50 @@
  (action
   (run firecracker --no-api --config-file %{config})))
 
+(executable
+ (name fail)
+ (flags
+  :standard
+  (:include "flags"))
+ (libraries unikraftstartup))
+
+(rule
+ (alias runtest)
+ (enabled_if
+  (and
+   (= %{context_name} unikraft)
+   (= %{env:UNIKRAFTBACKEND=qemu} qemu)))
+ (action
+  (with-accepted-exit-codes
+   (or 0 83 85)
+   (run
+    %{read-lines:qemu-call}
+    -nographic
+    -nodefaults
+    -serial
+    stdio
+    -netdev
+    user,id=n0,restrict=on
+    -device
+    virtio-net-pci,netdev=n0
+    -kernel
+    %{dep:fail.exe}))))
+
+(rule
+ (with-stdout-to
+  fail_fcvm_config.json
+  (run ./generator.exe fcconfig fail)))
+
+(rule
+ (alias runtest)
+ (enabled_if
+  (and
+   (= %{context_name} unikraft)
+   (= %{env:UNIKRAFTBACKEND=qemu} firecracker)
+   %{bin-available:firecracker}))
+ (deps
+  fail.exe
+  (:config fail_fcvm_config.json))
+ (action
+  (run firecracker --no-api --config-file %{config})))
+
