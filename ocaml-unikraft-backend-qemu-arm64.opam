@@ -48,6 +48,12 @@ extra-source "patches/lib-musl/arm64.patch" {
   checksum:
     "sha256=d83043f534a8da4f0133f4fbde0d78bc3a5d996ca6f7fc91b42ccf2874515514"
 }
+extra-source "patches/lib-musl/exit.patch" {
+  src:
+    "https://raw.githubusercontent.com/shym/lib-musl/refs/heads/patches/exit.patch"
+  checksum:
+    "sha256=41e72b400071b146dde8ecd7be09a4a6187d2ed448ae200581de5405f84db1ee"
+}
 extra-source "musl-1.2.3.tar.gz" {
   src: "https://www.musl-libc.org/releases/musl-1.2.3.tar.gz"
   checksum:
