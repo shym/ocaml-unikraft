@@ -373,10 +373,10 @@ downloads:
 localbuild: compiler
 	$(MAKE) install-ocaml
 	$(MAKE) _build/unikraft.conf
-	@echo "Now run:"
-	@echo "  export PATH=$(prefix):$$PATH"
-	@echo "  export OCAMLFIND_CONF=$$PWD/_build/unikraft.conf"
-	@echo "in your shell session to be able to use the unikraft toolchain."
+	@echo 'Now run:'
+	@echo '  export PATH="$(prefix)/bin:$$PATH";' \
+	    'export OCAMLFIND_CONF="$$PWD/_build/unikraft.conf"'
+	@echo 'in your shell session to be able to use the unikraft toolchain.'
 
 # Run the examples with a local build, setting PATH and OCAMLFIND_CONF for that
 .PHONY: localtests
