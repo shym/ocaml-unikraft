@@ -5,6 +5,7 @@ version: "0.18.0"
 maintainer: "samuel@tarides.com"
 homepage: "https://github.com/mirage/ocaml-unikraft/"
 bug-reports: "https://github.com/mirage/ocaml-unikraft/issues"
+tags: "org:mirage"
 synopsis: "Firecracker/arm64 Unikraft backend for OCaml"
 authors: ["Samuel Hym" "Unikraft contributors"]
 license: ["MIT" "BSD-3-Clause" "GPL-2.0-only"]

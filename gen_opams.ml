@@ -74,7 +74,8 @@ version: "%s"|} package_name version;
         {|
 maintainer: "samuel@tarides.com"
 homepage: "https://github.com/mirage/ocaml-unikraft/"
-bug-reports: "https://github.com/mirage/ocaml-unikraft/issues"|};
+bug-reports: "https://github.com/mirage/ocaml-unikraft/issues"
+tags: "org:mirage"|};
       gen out;
       (match (virt, !url) with
       | true, _ | _, None -> ()

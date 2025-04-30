@@ -5,6 +5,7 @@ version: "1.0.0"
 maintainer: "samuel@tarides.com"
 homepage: "https://github.com/mirage/ocaml-unikraft/"
 bug-reports: "https://github.com/mirage/ocaml-unikraft/issues"
+tags: "org:mirage"
 synopsis:
   "Virtual package to install one of the OCaml default cross compilers to the freestanding Unikraft backends"
 description:

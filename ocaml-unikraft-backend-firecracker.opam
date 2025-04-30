@@ -5,6 +5,7 @@ version: "1.0.0"
 maintainer: "samuel@tarides.com"
 homepage: "https://github.com/mirage/ocaml-unikraft/"
 bug-reports: "https://github.com/mirage/ocaml-unikraft/issues"
+tags: "org:mirage"
 synopsis:
   "Virtual package to ensure the Firecracker Unikraft backend is installed for the default cross compiler"
 description:

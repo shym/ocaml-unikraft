@@ -5,6 +5,7 @@ version: "0.18.0"
 maintainer: "samuel@tarides.com"
 homepage: "https://github.com/mirage/ocaml-unikraft/"
 bug-reports: "https://github.com/mirage/ocaml-unikraft/issues"
+tags: "org:mirage"
 synopsis:
   "Virtual package to enable debugging in the Unikraft backends"
 authors: "Samuel Hym"
