@@ -11,8 +11,9 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Install GNU make
-        run:
+        run: |
           brew install make
+          echo "/opt/homebrew/opt/make/libexec/gnubin" >> "$GITHUB_PATH"
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Install OCaml compiler
