@@ -10,9 +10,9 @@ jobs:
     name: Run examples on both architectures
     runs-on: macos-latest
     steps:
-      - name: Install GNU make
+      - name: Install GNU utils
         run: |
-          brew install make
+          brew install make gnu-sed
           echo "/opt/homebrew/opt/make/libexec/gnubin" >> "$GITHUB_PATH"
       - name: Checkout code
         uses: actions/checkout@v4
