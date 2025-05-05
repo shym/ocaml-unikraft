@@ -10,6 +10,9 @@ jobs:
     name: Run examples on both architectures
     runs-on: macos-latest
     steps:
+      - name: Install GNU make
+        run:
+          brew install make
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Install OCaml compiler
