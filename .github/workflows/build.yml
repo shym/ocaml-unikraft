@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Install GNU utils
         run: |
-          brew install make gnu-sed coreutils
+          brew install make gnu-sed coreutils x86_64-elf-gcc aarch64-elf-gcc
           echo "/opt/homebrew/opt/make/libexec/gnubin" >> "$GITHUB_PATH"
       - name: Checkout code
         uses: actions/checkout@v4
