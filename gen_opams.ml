@@ -232,18 +232,23 @@ flags: conf
 build: [%S "--version"]
 depexts: [
   ["gcc-%s-linux-gnu"] {os-family = "debian" | os-family = "fedora"}
-  ["cross-%s-gcc14"] {os-family = "suse"}|}
-          cmd cmd cmd pfx_arch pfx_arch;
-        (match arch with
-        | "arm64" ->
-            Printf.fprintf out {|
-  ["%s-linux-gnu-gcc"] {os-family = "arch"}|}
-              pfx_arch
-        | _ -> () (* No cross compiler to x86_64 packaged in aarch64 Arch *));
-        Printf.fprintf out {|
+  ["%s-linux-gnu-gcc"] {os-family = "arch"}
+  ["no-known-package"]
+    {os-distribution = "alpine" | os-family = "suse" | os-family = "opensuse" |
+     os-family = "bsd" | os = "macos" | os = "cygwin" | os = "win32"}
+]
+x-ci-accept-failures: [
+  # the packages are not available on all architectures in debian 12, it will be
+  # completed in debian 13
+  "debian-12"
+  # no package available
+  "opensuse-tumbleweed"
+  "freebsd-14.2"
+  "macos-homebrew"
 ]
 x-maintenance-intent: ["(latest)"]
-|})
+|}
+          cmd cmd cmd pfx_arch pfx_arch)
 
 let backend_package arch backend =
   let short_name, long_name = backend in
