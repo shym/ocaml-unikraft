@@ -15,7 +15,7 @@ env:
 permissions: {}
 
 jobs:
-  test:
+  test-amd64:
     name: Run examples on both architectures
     runs-on: ubuntu-latest
     steps:
@@ -96,6 +96,73 @@ jobs:
           wget -q -O- "https://github.com/firecracker-microvm/firecracker/releases/download/v$FCVER/firecracker-v$FCVER-x86_64.tgz" | tar xvz
           mkdir -p "$HOME/.local/bin"
           mv "release-v$FCVER-x86_64/firecracker-v$FCVER-x86_64" "$HOME/.local/bin/firecracker"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Test examples with Firecracker
+        run: |
+          cd examples/all/
+          export UNIKRAFTBACKEND=firecracker
+          sudo setfacl -m u:${USER}:rw /dev/kvm
+          opam exec -- dune build @test-args
+          sudo setfacl -m u:${USER}:rw /dev/kvm
+          opam exec -- dune build @test-fail
+          sudo setfacl -m u:${USER}:rw /dev/kvm
+          opam exec -- dune build @test-hello
+          sudo setfacl -m u:${USER}:rw /dev/kvm
+          opam exec -- dune build @test-sleeper
+          sudo setfacl -m u:${USER}:rw /dev/kvm
+          opam exec -- dune build @test-threader
+
+  test-arm64:
+    name: Run examples with Firecracker on ARM
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install OCaml compiler
+        uses: ocaml/setup-ocaml@v3
+        with:
+          ocaml-compiler: 5.3.0
+          # We need to pin our packages with their real version numbers, to
+          # satisfy the dependency bounds of the other packages
+          opam-pin: false
+      - name: Pin packages
+        run: |
+          opam pin add -yn "https://github.com/mirage/unikraft.git#$UKVER+mirage"
+          opam pin add -yn "https://github.com/mirage/unikraft-lib-musl.git#$UKVER+mirage"
+          opam pin add -yn ocaml-unikraft.$OCUKVER .
+          opam pin add -yn ocaml-unikraft-arm64.$OCUKVER .
+          opam pin add -yn ocaml-unikraft-backend-firecracker.$UKVER .
+          opam pin add -yn ocaml-unikraft-backend-firecracker-arm64.$UKVER .
+          opam pin add -yn ocaml-unikraft-backend-firecracker-x86_64.$UKVER .
+          opam pin add -yn ocaml-unikraft-backend-qemu.$UKVER .
+          opam pin add -yn ocaml-unikraft-backend-qemu-arm64.$UKVER .
+          opam pin add -yn ocaml-unikraft-backend-qemu-x86_64.$UKVER .
+          opam pin add -yn ocaml-unikraft-default-arm64.$OCUKVER .
+          opam pin add -yn ocaml-unikraft-default-x86_64.$OCUKVER .
+          opam pin add -yn ocaml-unikraft-option-debug.$UKVER .
+          opam pin add -yn ocaml-unikraft-toolchain-arm64.$UKVER .
+          opam pin add -yn ocaml-unikraft-toolchain-x86_64.$UKVER .
+          opam pin add -yn ocaml-unikraft-x86_64.$OCUKVER .
+      - name: Install packages
+        run: |
+          opam install                               \
+            dune                                     \
+            ocaml-unikraft-arm64                     \
+            ocaml-unikraft-backend-firecracker-arm64 \
+            ocaml-unikraft                           \
+            ocaml-unikraft-default-arm64             \
+            ocaml-unikraft-backend-firecracker
+      - name: Show configuration
+        run: |
+          opam exec -- ocamlc -config
+          opam config list
+          opam list
+          opam exec -- ocamlfind -toolchain unikraft ocamlc -config
+      - name: Install Firecracker
+        run: |
+          wget -q -O- "https://github.com/firecracker-microvm/firecracker/releases/download/v$FCVER/firecracker-v$FCVER-aarch64.tgz" | tar xvz
+          mkdir -p "$HOME/.local/bin"
+          mv "release-v$FCVER-aarch64/firecracker-v$FCVER-aarch64" "$HOME/.local/bin/firecracker"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Test examples with Firecracker
         run: |
