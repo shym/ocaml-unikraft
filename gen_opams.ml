@@ -312,11 +312,12 @@ build: [
     "OCUKCUSTOMCFGDIR=%%{ocaml-unikraft-custom-configs:share}%%"
       {ocaml-unikraft-custom-configs:installed}
     "UK_CFLAGS=-std=gnu11"
+    "CROSS_COMPILE=%s-linux-gnu-" {os != "linux"}
     "%%{name}%%.install"
   ]
 ]
 |}
-        short_name arch;
+        short_name arch (prefix_arch arch);
       if !repository_layout then
         Printf.fprintf out
           {|x-ci-accept-failures: [
