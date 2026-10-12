@@ -73,8 +73,9 @@ jobs:
         if: ${{ matrix.ocukver == 'dev' }}
       - name: Install extra packages
         run: |
-          brew update
+          # brew update
           brew tap messense/macos-cross-toolchains
+          brew trust messense/macos-cross-toolchains
           brew install qemu x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu
           opam install dune
       - name: Install arch-specific packages
