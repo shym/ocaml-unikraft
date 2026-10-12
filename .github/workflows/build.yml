@@ -78,6 +78,11 @@ jobs:
           brew trust messense/macos-cross-toolchains
           brew install make qemu x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu
           opam install dune
+          echo "$(brew --prefix)/opt/make/libexec/gnubin" > "$GITHUB_PATH"
+      - run: |
+          set -x
+          echo "$PATH"
+          command -v make
       - name: Install arch-specific packages
         run: |
           opam install                                       \
