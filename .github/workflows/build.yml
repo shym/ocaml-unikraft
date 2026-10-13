@@ -148,7 +148,7 @@ jobs:
           mkdir -p "$HOME/.local/bin"
           mv "release-v$FCVER-x86_64/firecracker-v$FCVER-x86_64" "$HOME/.local/bin/firecracker"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-        if: runner.os == "Linux"
+        if: ${{ runner.os == 'Linux' }}
       - name: Test examples with Firecracker
         run: |
           cd examples/all/
@@ -163,7 +163,7 @@ jobs:
           opam exec -- dune build @test-sleeper
           sudo setfacl -m u:${USER}:rw /dev/kvm
           opam exec -- dune build @test-threader
-        if: runner.os == "Linux"
+        if: ${{ runner.os == 'Linux' }}
 
   mirage:
     name: Build and test MirageOS unikernels
