@@ -85,19 +85,14 @@ jobs:
           command -v make bash
       - name: Install arch-specific packages
         run: |
-          opam install                                       \
-            ocaml-unikraft-x86_64.$OCUKVER                   \
-            ocaml-unikraft-backend-qemu-x86_64.$UKVER        \
-            ocaml-unikraft-backend-firecracker-x86_64.$UKVER \
-            ocaml-unikraft-arm64.$OCUKVER                    \
-            ocaml-unikraft-backend-qemu-arm64.$UKVER         \
-            ocaml-unikraft-backend-firecracker-arm64.$UKVER
+          opam install ocaml-unikraft-backend-qemu-x86_64.$UKVER
+          opam exec -- sh -c 'cat "$(which x86_64-unikraft-ocaml-cc)"'
+          opam install ocaml-unikraft-x86_64.$OCUKVER
       - name: Show configuration
         run: |
           opam exec -- ocamlc -config
           opam config list
           opam list
-          opam exec -- sh -c 'cat "$(which x86_64-unikraft-ocaml-cc)"'
       - name: Install default packages
         run: |
           opam install                            \
