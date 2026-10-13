@@ -41,12 +41,7 @@ process_option() {
   opt="${opt//"$REALUKLIBSDIR"/__builddir_temporary_placeholder__}"
   opt="${opt//"$UNIKRAFTDIR"/__unikraftdir_temporary_placeholder__}"
   opt="${opt//"$REALUNIKRAFTDIR"/__unikraftdir_temporary_placeholder__}"
-  qopt="${opt@Q}"
-  # Check that it was quoted using the form '...', as we will assume it was when
-  # injecting the variables; if that's not the case, do it using sed
-  if [ -n "${qopt##\'*\'}" ]; then
-    qopt="'$(printf %s "$opt" | sed "s/'/'\\\\''/g")'"
-  fi
+  qopt="'$(printf %s "$opt" | sed "s/'/'\\\\''/g")'"
   qopt="${qopt//__builddir_temporary_placeholder__/\'\"\$\{LIBDIR\}\"\'}"
   qopt="${qopt//__unikraftdir_temporary_placeholder__/\'\"\$\{UKLIBDIR\}\"\'}"
   printf '      %s \\\n' "$qopt"
