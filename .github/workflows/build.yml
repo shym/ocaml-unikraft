@@ -97,6 +97,7 @@ jobs:
           opam exec -- ocamlc -config
           opam config list
           opam list
+          opam exec -- sh -c 'cat "$(which x86_64-unikraft-ocaml-cc)"'
       - name: Install default packages
         run: |
           opam install                            \
