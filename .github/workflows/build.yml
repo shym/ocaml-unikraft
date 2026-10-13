@@ -59,7 +59,7 @@ jobs:
           opam-pin: false
       - name: Pin Unikraft packages
         run: |
-          opam pin add -yn "https://github.com/mirage/unikraft.git#${UKVER#*-}+mirage"
+          opam pin add -yn "https://github.com/shym/unikraft.git#relax"
           opam pin add -yn "https://github.com/mirage/unikraft-lib-musl.git#${UKVER#*-}+mirage"
           opam pin add -yn ocaml-unikraft-backend-firecracker.$UKVER .
           opam pin add -yn ocaml-unikraft-backend-firecracker-arm64.$UKVER .
@@ -115,6 +115,7 @@ jobs:
           opam exec -- ocamlc -config
           opam config list
           opam list
+          opam exec -- sh -c 'cat "$(which x86_64-unikraft-ocaml-cc)"'
       - name: Install default packages
         run: |
           opam install                            \
