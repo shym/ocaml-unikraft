@@ -74,17 +74,15 @@ jobs:
       - name: Install extra packages
         run: |
           # brew update
-          bash --version
           brew tap messense/macos-cross-toolchains
           brew trust messense/macos-cross-toolchains
-          brew install make gnu-sed coreutils grep bash qemu x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu
+          brew install make gnu-sed coreutils grep qemu x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu
           opam install dune
           echo "$(brew --prefix)/opt/make/libexec/gnubin" > "$GITHUB_PATH"
-          bash --version
       - run: |
           set -x
           echo "$PATH"
-          command -v make
+          command -v make bash
       - name: Install arch-specific packages
         run: |
           opam install                                       \
