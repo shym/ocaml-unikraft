@@ -61,7 +61,7 @@ jobs:
           opam-pin: false
       - name: Pin Unikraft packages
         run: |
-          opam pin add -yn "https://github.com/mirage/unikraft.git#relax"
+          opam pin add -yn "https://github.com/mirage/unikraft.git#${UKVER#*-}+mirage"
           opam pin add -yn "https://github.com/mirage/unikraft-lib-musl.git#${UKVER#*-}+mirage"
           opam pin add -yn ocaml-unikraft-backend-firecracker.$UKVER .
           opam pin add -yn ocaml-unikraft-backend-firecracker-arm64.$UKVER .
