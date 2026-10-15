@@ -194,6 +194,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
       - name: Read the version number from gen_opams.ml
+        env:
+          REF: ${{ github.ref }}
         run: |
           # OCaml/Unikraft version number
           V="$(awk '/^let version_o/ {gsub(/"/,"");print $4;}' gen_opams.ml)"
@@ -208,7 +210,7 @@ jobs:
               B="${REF#refs/heads/ci-}+mirage"
               ;;
             *)
-              B="${UKVER#*-}+mirage"
+              B="$U+mirage"
               ;;
           esac
           printf 'UKBRANCH=%s\n' "$B" >> "$GITHUB_ENV"
