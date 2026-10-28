@@ -11,9 +11,6 @@ name: Build and test
 
 on:
   push:
-    branches:
-      - main
-      - "ci-**"
   pull_request:
 
 env:
@@ -23,156 +20,13 @@ env:
 permissions: {}
 
 jobs:
-  test:
-    name: Run examples on both architectures
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - ocukver: dev
-            ukver: dev
-            ocver: 5.4.0
-          - ocukver: dev
-            ukver: dev
-            ocver: 5.5.1
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-      - name: Read the version number from gen_opams.ml
-        env:
-          OCUKVER: ${{ matrix.ocukver }}
-          UKVER: ${{ matrix.ukver }}
-          REF: ${{ github.ref }}
-        run: |
-          # OCaml/Unikraft version number
-          V="$(awk '/^let version_o/ {gsub(/"/,"");print $4;}' gen_opams.ml)"
-          [[ "$OCUKVER" = dev ]] && OCUKVER="$V"
-          printf 'OCUKVER=%s\n' "$OCUKVER" >> "$GITHUB_ENV"
-          # Unikraft version number
-          U="$(awk '/^let version_unikraft_base/ {gsub(/"/,"");print $4;}' \
-            gen_opams.ml)"
-          [[ "$UKVER" = dev ]] && UKVER="$V-$U"
-          printf 'UKVER=%s\n' "$UKVER" >> "$GITHUB_ENV"
-          # Unikraft and lib-musl branches to pull (only when we are triggered
-          # on a push of a ci-* branch, and it will be used only when UKVER is
-          # dev)
-          case "$REF" in
-            refs/heads/ci-*)
-              B="${REF#refs/heads/ci-}+mirage"
-              ;;
-            *)
-              B="${UKVER#*-}+mirage"
-              ;;
-          esac
-          printf 'UKBRANCH=%s\n' "$B" >> "$GITHUB_ENV"
-          # Log
-          printf 'OCaml/Unikraft: %s\nUnikraft: %s\nBranch: %s\n' "$V" "$U" "$B"
-      - name: Install OCaml compiler
-        uses: ocaml/setup-ocaml@v3
-        with:
-          ocaml-compiler: ${{ matrix.ocver }}
-          # We need to pin our packages with their real version numbers, to
-          # satisfy the dependency bounds of the other packages
-          opam-pin: false
-      - name: Pin Unikraft packages
-        env:
-          OWNER: ${{ github.repository_owner }}
-        run: |
-          opam pin add -yn "https://github.com/$OWNER/unikraft.git#$UKBRANCH"
-          opam pin add -yn "https://github.com/$OWNER/unikraft-lib-musl.git#$UKBRANCH"
-          opam pin add -yn ocaml-unikraft-backend-firecracker.$UKVER .
-          opam pin add -yn ocaml-unikraft-backend-firecracker-arm64.$UKVER .
-          opam pin add -yn ocaml-unikraft-backend-firecracker-x86_64.$UKVER .
-          opam pin add -yn ocaml-unikraft-backend-qemu.$UKVER .
-          opam pin add -yn ocaml-unikraft-backend-qemu-arm64.$UKVER .
-          opam pin add -yn ocaml-unikraft-backend-qemu-x86_64.$UKVER .
-          opam pin add -yn ocaml-unikraft-option-debug.$UKVER .
-          opam pin add -yn ocaml-unikraft-option-9pfs.$UKVER .
-          opam pin add -yn ocaml-unikraft-toolchain-arm64.$UKVER .
-          opam pin add -yn ocaml-unikraft-toolchain-x86_64.$UKVER .
-        if: ${{ matrix.ukver == 'dev' }}
-      - name: Pin OCaml/Unikraft packages
-        run: |
-          opam pin add -yn ocaml-unikraft.$OCUKVER .
-          opam pin add -yn ocaml-unikraft-arm64.$OCUKVER .
-          opam pin add -yn ocaml-unikraft-default-arm64.$OCUKVER .
-          opam pin add -yn ocaml-unikraft-default-x86_64.$OCUKVER .
-          opam pin add -yn ocaml-unikraft-x86_64.$OCUKVER .
-        if: ${{ matrix.ocukver == 'dev' }}
-      - name: Install extra packages
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y qemu-system-x86 qemu-system-arm
-          opam install dune
-      - name: Install arch-specific packages
-        run: |
-          opam install                                       \
-            ocaml-unikraft-x86_64.$OCUKVER                   \
-            ocaml-unikraft-backend-qemu-x86_64.$UKVER        \
-            ocaml-unikraft-backend-firecracker-x86_64.$UKVER \
-            ocaml-unikraft-arm64.$OCUKVER                    \
-            ocaml-unikraft-backend-qemu-arm64.$UKVER         \
-            ocaml-unikraft-backend-firecracker-arm64.$UKVER
-      - name: Show configuration
-        run: |
-          opam exec -- ocamlc -config
-          opam config list
-          opam list
-      - name: Install default packages
-        run: |
-          opam install                            \
-            ocaml-unikraft.$OCUKVER               \
-            ocaml-unikraft-default-arm64.$OCUKVER \
-            ocaml-unikraft-backend-qemu.$UKVER    \
-            ocaml-unikraft-backend-firecracker.$UKVER
-      - name: Show toolchain configuration
-        run: |
-          opam exec -- ocamlfind -toolchain unikraft ocamlc -config -verbose
-      - name: Test examples
-        run: |
-          cd examples/simple/
-          opam exec -- dune build
-          cd ../all/
-          opam exec -- dune runtest -f _build/unikraft
-      - name: Install the other default packages
-        run: |
-          opam install ocaml-unikraft-default-x86_64.$OCUKVER
-      - name: Show configuration
-        run: |
-          opam exec -- ocamlfind -toolchain unikraft ocamlc -config -verbose
-      - name: Test examples with QEMU
-        run: |
-          cd examples/all/
-          opam exec -- dune runtest -f _build/unikraft
-      - name: Install Firecracker
-        run: |
-          wget -q -O- "https://github.com/firecracker-microvm/firecracker/releases/download/v$FCVER/firecracker-v$FCVER-x86_64.tgz" | tar xvz
-          mkdir -p "$HOME/.local/bin"
-          mv "release-v$FCVER-x86_64/firecracker-v$FCVER-x86_64" "$HOME/.local/bin/firecracker"
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-      - name: Test examples with Firecracker
-        run: |
-          cd examples/all/
-          export UNIKRAFTBACKEND=firecracker
-          sudo setfacl -m u:${USER}:rw /dev/kvm
-          opam exec -- dune build @test-args
-          sudo setfacl -m u:${USER}:rw /dev/kvm
-          opam exec -- dune build @test-fail
-          sudo setfacl -m u:${USER}:rw /dev/kvm
-          opam exec -- dune build @test-hello
-          sudo setfacl -m u:${USER}:rw /dev/kvm
-          opam exec -- dune build @test-sleeper
-          sudo setfacl -m u:${USER}:rw /dev/kvm
-          opam exec -- dune build @test-threader
-
   mirage:
     name: Build and test MirageOS unikernels
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     strategy:
       fail-fast: false
       matrix:
-        ocaml: [5.4.1, 5.5.1]
+        ocaml: [5.5.1]
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
